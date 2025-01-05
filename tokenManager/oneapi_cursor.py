@@ -1,3 +1,5 @@
+# The code is used to delete low quota cursor account in one-api service
+
 import argparse
 import requests
 from oneapi_manager import OneAPIManager
