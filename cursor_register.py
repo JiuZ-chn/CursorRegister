@@ -74,16 +74,16 @@ def sign_up(browser):
         return empty_return
     browser.wait(0.5, 1.5)
 
-    message = temp_email.wait_for_message(timeout=120)
-    message_text = message.body.strip().replace('\n', '').replace('\r', '').replace('=', '')
-    verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
-
     try:
+        message = temp_email.wait_for_message(timeout=180)
+        message_text = message.body.strip().replace('\n', '').replace('\r', '').replace('=', '')
+        verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
         for idx, digit in enumerate(verify_code, start = 0):
             tab.ele(f'@data-index={idx}', timeout=30).input(digit)
             browser.wait(0.1, 0.3)
     except Exception as e:
         print(e)
+        return empty_return
 
     try:
         cursor_turnstile(tab)            
