@@ -177,7 +177,7 @@ if __name__ == "__main__":
     if use_oneapi:
         from tokenManager.oneapi_manager import OneAPIManager
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
-        oneapi.add_chanel("Cursor", 
-                          oneapi_channel_url, 
-                          [row['token'] for row in account_infos],
-                          OneAPIManager.cursor_models)
+        oneapi.add_channel("Cursor", 
+                           oneapi_channel_url, 
+                           [row['token'] for row in account_infos],
+                           OneAPIManager.cursor_models)
