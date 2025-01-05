@@ -106,7 +106,7 @@ def sign_up(browser):
         'token': token
     }
 
-def register_cursor(number):
+def register_cursor(number, use_oneapi, oneapi_url, oneapi_token):
 
     max_workers = 5
 
@@ -146,19 +146,38 @@ def register_cursor(number):
             writer.writerows(results)
 
         # Only write token to csv file, without header
-        selected_column = 'token'
-        selected_data = [{selected_column: row[selected_column]} for row in results]
+        tokens = [{'token': row['token']} for row in results]
         with open(token_file, 'a', newline='') as file:
-            writer = csv.DictWriter(file, fieldnames=[selected_column])
-            writer.writerows(selected_data)
+            writer = csv.DictWriter(file, fieldnames=['token'])
+            writer.writerows(tokens)
+
+    return results
+
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='Cursor Registor')
-    parser.add_argument('-n', '--number', type=int, default=2,
-                        help="How many account you want")
+    parser.add_argument('--number', type=int, default=2, help="How many account you want")
     
+    # The parameters with name starts with oneapi are used to uploead the cookie token to one-api, new-api, chat-api server.
+    parser.add_argument('--oneapi', action='store_true', help='Enable One-API or not')
+    parser.add_argument('--oneapi_url', type=str, required=False, help='URL link for One-API website')
+    parser.add_argument('--oneapi_token', type=str, required=False, help='Token for One-API website')
+    parser.add_argument('--oneapi_channel_url', type=str, required=False, help='Base url for One-API channel')
+
     args = parser.parse_args()
     number = args.number
+    use_oneapi = args.oneapi
+    oneapi_url = args.oneapi_url
+    oneapi_token = args.oneapi_token
+    oneapi_channel_url = args.oneapi_channel_url
 
-    register_cursor(number)
+    account_infos = register_cursor(number, use_oneapi, oneapi_url, oneapi_token)
+
+    if use_oneapi:
+        from tokenManager.oneapi_manager import OneAPIManager
+        oneapi = OneAPIManager(oneapi_url, oneapi_token)
+        oneapi.add_chanel("Cursor", 
+                          oneapi_channel_url, 
+                          [row['token'] for row in account_infos],
+                          OneAPIManager.cursor_models)
