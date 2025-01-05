@@ -22,7 +22,7 @@ class OneAPIManager:
         self.base_url = url
         self.access_token = access_token
 
-    def add_chanel(self, name, base_url, keys, models, rate_limit_count = 0):
+    def add_channel(self, name, base_url, keys, models, rate_limit_count = 0):
         url = self.base_url + "/api/channel"
 
         headers = {
