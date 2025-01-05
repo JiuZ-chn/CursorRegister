@@ -30,16 +30,12 @@ class OneAPIManager:
         url = self.base_url + f"/api/channel/{id}"
 
         response = requests.get(url, headers=self.headers)
-        print(f'OneAPI Request Status Code: {response.status_code}')
-        print(f'OneAPI Request Response Body: {response.json()}')
         return response
 
     def get_channels(self, page, pagesize):
         url = self.base_url + f"/api/channel/?p={page}&page_size={pagesize}"
 
         response = requests.get(url, headers=self.headers)
-        print(f'OneAPI Request Status Code: {response.status_code}')
-        print(f'OneAPI Request Response Body: {response.json()}')
         return response
 
     def add_channel(self, name, base_url, keys, models, rate_limit_count = 0):
@@ -81,14 +77,10 @@ class OneAPIManager:
         }
 
         response = requests.post(url, json=data, headers=self.headers)
-        print(f'OneAPI Request Status Code: {response.status_code}')
-        print(f'OneAPI Request Response Body: {response.json()}')
         return response
     
     def delete_channel(self, id):
         url = self.base_url + f"/api/channel/{id}"
 
         response = requests.delete(url, headers=self.headers)
-        print(f'OneAPI Request Status Code: {response.status_code}')
-        print(f'OneAPI Request Response Body: {response.json()}')
         return response
