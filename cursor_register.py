@@ -1,8 +1,6 @@
 import os
 import re
 import csv
-import time
-import random
 import argparse
 import concurrent.futures
 from datetime import datetime
