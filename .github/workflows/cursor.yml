@@ -8,17 +8,11 @@ on:
       max_workers:
         default: "1"
       ingest_to_oneapi:
-        description: 'Ingest account tokens to OneAPI or not'
-        default: 'false'
-        options:
-          - 'true'
-          - 'false'
+        description: 'Ingest account tokens to OneAPI'
+        type: boolean
       upload_artifact:
-        description: 'Upload account artifact or not'
-        default: 'false'
-        options:
-          - 'true'
-          - 'false'
+        description: 'Upload account artifact'
+        type: boolean
 
 jobs:
   build:
