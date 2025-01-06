@@ -2,6 +2,9 @@
 
 Automatically register a Cursor account and save the account name, password, and token.
 
+Poor network environment has a huge impact on this project. If the registration success rate is low, please consider using a proxy or other network.
+（较差的网络环境对本项目影响巨大，如果注册成功率较低，请考虑使用代理或者使用其他网络）
+
 ## Run in local
 
 ### Install dependency
@@ -9,7 +12,7 @@ Automatically register a Cursor account and save the account name, password, and
 The code does not support to run with headless mode now. Please run the python script in Windows platform with UI.
 
 ```
-pip install -r requirements.txt
+pip install requirements.txt
 ```
 
 ### Register accounts. Save the account info and cookie token into csv.
