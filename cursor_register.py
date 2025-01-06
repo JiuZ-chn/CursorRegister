@@ -77,10 +77,6 @@ def sign_up(browser):
         try:
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
-        
-            if tab.ele('This email is not available.'):
-                print('This email is not available.')
-                return None
             tab.wait(2.5, 4.5)
         except Exception as e:
             print(e)
