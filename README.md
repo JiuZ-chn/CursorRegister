@@ -2,7 +2,7 @@
 
 Automatically register a Cursor account and save the account name, password, and token.
 
-## How to use
+## Run in local
 
 ### Install dependency
 
@@ -15,7 +15,7 @@ pip install requirements.txt
 ### Register accounts. Save the account info and cookie token into csv.
 
 ```
-python cursor_register.py --number 10
+python cursor_register.py --number 3
 ```
 - `number` is the account number you want.
 
@@ -28,7 +28,9 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 - `oneapi_token`: The access token for your oneapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
 - `oneapi_channel_url`: The cursor-api reverse proxy server like [cursor-api](https://github.com/lvguanjun/cursor-api)
 
-### [Github Action] Register accounts. Upload the account cookie token into [One-API](https://github.com/songquanpeng/one-api)
+## Run in Github Action
+
+### Register accounts. Upload the account cookie token into [One-API](https://github.com/songquanpeng/one-api)
 
 To run the register in Github Action and ingest the account cookie into ONE API, you need to add the following secret in your repo. 
 
