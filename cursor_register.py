@@ -53,10 +53,12 @@ def sign_up(browser):
             tab.wait(2.5, 4.5)
 
             if tab.ele("xpath=//input[@name='email']").attr("data-valid") != "true":
+                tab.close()
                 return None
 
         except Exception as e:
             print(e)
+            tab.close()
             return None
         
         # In password page or data is validated, continue to next page
@@ -66,6 +68,7 @@ def sign_up(browser):
         # Kill the function since time out 
         if _ == retry_times -1:
             print("[Register] Timeout when inputing email address")
+            tab.close()
             return None
 
     # If not in password page, try pass turnstile page
@@ -80,6 +83,7 @@ def sign_up(browser):
             tab.wait(2.5, 4.5)
         except Exception as e:
             print(e)
+            tab.close()
             return None
 
         # In code verification page or data is validated, continue to next page
@@ -89,6 +93,7 @@ def sign_up(browser):
         # Kill the function since time out 
         if _ == retry_times -1:
             print("[Register] Timeout when inputing password")
+            tab.close()
             return None
 
     # If not in verification code page, try pass turnstile page
@@ -106,6 +111,7 @@ def sign_up(browser):
         tab.wait(0.5, 1.5)            
     except Exception as e:
         print(e)
+        tab.close()
         return None
 
     if tab.url != "https://www.cursor.com/":
