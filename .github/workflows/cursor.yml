@@ -39,3 +39,4 @@ jobs:
         with:
           name: "Account Info"
           path: "*.csv"
+          retention-days: 1
