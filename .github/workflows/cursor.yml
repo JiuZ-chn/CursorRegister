@@ -5,6 +5,8 @@ on:
     inputs:
       number:
         default: "2"
+      max_workers:
+        default: "1"
 
 jobs:
   build:
@@ -16,4 +18,4 @@ jobs:
           pip3 install -r ./requirements.txt
       - name: Run script
         run: |
-          python3 ./cursor_register.py --oneapi --oneapi_url "${{ secrets.CURSOR_ONEAPI_URL }}" --oneapi_token "${{ secrets.CURSOR_ONEAPI_TOKEN }}" --oneapi_channel_url "${{ secrets.CURSOR_CHANNEL_URL }}" --number ${{ github.event.inputs.number }} 
+          python3 ./cursor_register.py --oneapi --oneapi_url "${{ secrets.CURSOR_ONEAPI_URL }}" --oneapi_token "${{ secrets.CURSOR_ONEAPI_TOKEN }}" --oneapi_channel_url "${{ secrets.CURSOR_CHANNEL_URL }}" --number ${{ github.event.inputs.number }} --max_workers ${{ github.event.inputs.max_workers }} 
