@@ -35,8 +35,8 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 Please run the Github Action pipeline with the following parameter:
 - `number`: The account number you want to register
 - `max_workers`: Parallelism for threading pool
-- `ingest_to_oneapi`: Mark as `☐` to disable One-API service
-- `upload_artifact`: Mark as `☑` to make Github Action uploead the csv files to artifacts. Then you can download them after workflow succeeds.
+- `Ingest account tokens to OneAPI`: Mark as `☐` to disable One-API service
+- `Upload account infos to artifact`: Mark as `☑` to make Github Action uploead the csv files to artifacts. Then you can download them after workflow succeeds.
 
 ### Register accounts. Upload the account cookie token into [One-API](https://github.com/songquanpeng/one-api)
 
@@ -49,8 +49,8 @@ Before ingest the account cookie into ONE API, you need to add the following sec
 Please run the Github Action pipeline with the following parameter:
 - `number`: The account number you want to register
 - `max_workers`: Parallelism for threading pool
-- `ingest_to_oneapi`: Mark as `☑` to enable One-API service
-- `upload_artifact`: `☑` for uploead the artifact and `☑` will skip this step
+- `Ingest account tokens to OneAPI`: Mark as `☑` to enable One-API service
+- `Upload account infos to artifact`: `☑` for uploeading the artifact and `☑` will skip this step
 
 (Sometimes `max_workers > 1` does not work in Github Action environment, not sure why it happens)
 
