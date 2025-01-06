@@ -28,6 +28,14 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 - `oneapi_token`: The access token for your oneapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
 - `oneapi_channel_url`: The cursor-api reverse proxy server like [cursor-api](https://github.com/lvguanjun/cursor-api)
 
+### Clean up low quota Cursor account in OneAPI
+
+```
+python tokenManager/oneapi_cursor.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token}
+```
+- `oneapi_url`: The web address for your oneapi server. 
+- `oneapi_token`: The access token for your oneapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+
 ## Run in Github Action
 
 ### Register accounts. Download account info and cookie token from Github Artifact.
