@@ -47,8 +47,8 @@ def sign_up(browser):
     for _ in range(retry_times):
         try:
             tab.ele("@name=first_name").input(first_name, clear=True)
-            tab.ele("@name=last_name").input(last_name, clear=True))
-            tab.ele("@name=email").input(email, clear=True))
+            tab.ele("@name=last_name").input(last_name, clear=True)
+            tab.ele("@name=email").input(email, clear=True)
             tab.ele("@type=submit").click()
             cursor_turnstile(tab)
             tab.wait(0.5, 1.5)
