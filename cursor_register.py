@@ -51,18 +51,24 @@ def sign_up(browser):
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
             tab.ele("@type=submit").click()
             tab.wait(2.5, 4.5)
+
+            if tab.ele("xpath=//input[@name='email']").attr("data-valid") != "true":
+                return None
+
         except Exception as e:
             print(e)
             return None
-
-        if tab.ele("xpath=//input[@name='email']").attr("data-valid") == 'true':
+        
+        # In password page or data is validated, continue to next page
+        if tab.ele("xpath=//input[@name='password']") or tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
             break
 
         # Kill the function since time out 
         if _ == retry_times -1:
             print("[Register] Timeout when inputing email address")
             return None
-    # If not in password page, try pass turnstile
+
+    # If not in password page, try pass turnstile page
     if not tab.ele("xpath=//input[@name='password']"):
         cursor_turnstile(tab)
     
@@ -80,7 +86,8 @@ def sign_up(browser):
             print(e)
             return None
 
-        if tab.ele("xpath=//input[@name='password']").attr("data-valid") == 'true':
+        # In code verification page or data is validated, continue to next page
+        if tab.ele("xpath=//input[@data-index=0]") or tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
             break
 
         # Kill the function since time out 
@@ -88,7 +95,7 @@ def sign_up(browser):
             print("[Register] Timeout when inputing password")
             return None
 
-    # If not in verification code page, try pass turnstile
+    # If not in verification code page, try pass turnstile page
     if not tab.ele("xpath=//input[@data-index=0]"):
         cursor_turnstile(tab)
 
@@ -100,12 +107,14 @@ def sign_up(browser):
         for idx, digit in enumerate(verify_code, start = 0):
             tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
             tab.wait(0.1, 0.3)
-        cursor_turnstile(tab)
-        tab.wait(0.5, 1.5)
+        tab.wait(0.5, 1.5)            
     except Exception as e:
         print(e)
         return None
-    
+
+    if tab.url != "https://www.cursor.com/":
+        cursor_turnstile(tab)
+
     # Get cookie
     cookies = tab.cookies().as_dict()
     token = cookies.get('WorkosCursorSessionToken', None)
@@ -142,6 +151,7 @@ def register_cursor(number, max_workers):
     browser.quit(force=True)
 
     results = [result for result in results if result["token"] is not None]
+    #print(results)
     if len(results)>0:
         formatted_date = datetime.now().strftime("%Y-%m-%d")
 
