@@ -43,45 +43,44 @@ def sign_up(browser):
 
     tab = browser.new_tab(CURSOR_SIGN_UP_URL)
     browser.wait(0.5, 1.5)
-
     # Input first name, last name, email
     for _ in range(retry_times):
         try:
-            tab.ele("@name=first_name").input(first_name, clear=True)
-            tab.ele("@name=last_name").input(last_name, clear=True)
-            tab.ele("@name=email").input(email, clear=True)
+            tab.ele("xpath=//input[@name='first_name']").input(first_name, clear=True)
+            tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
+            tab.ele("xpath=//input[@name='email']").input(email, clear=True)
             tab.ele("@type=submit").click()
-            cursor_turnstile(tab)
-            tab.wait(0.5, 1.5)
+            tab.wait(2.5, 4.5)
         except Exception as e:
             print(e)
             return None
 
-        # Continue to next step when the page is in password page
-        if tab.wait.eles_loaded("@text()=Password"):
+        if tab.ele("xpath=//input[@name='email']").attr("data-valid") == 'true':
             break
 
         # Kill the function since time out 
         if _ == retry_times -1:
             print("[Register] Timeout when inputing email address")
             return None
+    # If not in password page, try pass turnstile
+    if not tab.ele("xpath=//input[@name='password']"):
+        cursor_turnstile(tab)
     
     # Input password
     for _ in range(retry_times):
         try:
-            tab.ele('@name=password').input(password, clear=True)
+            tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
         
             if tab.ele('This email is not available.'):
                 print('This email is not available.')
                 return None
-            cursor_turnstile(tab)
-            tab.wait(0.5, 1.5)
+            tab.wait(2.5, 4.5)
         except Exception as e:
             print(e)
             return None
 
-        if tab.wait.eles_loaded("@data-index=0"):
+        if tab.ele("xpath=//input[@name='password']").attr("data-valid") == 'true':
             break
 
         # Kill the function since time out 
@@ -89,13 +88,17 @@ def sign_up(browser):
             print("[Register] Timeout when inputing password")
             return None
 
+    # If not in verification code page, try pass turnstile
+    if not tab.ele("xpath=//input[@data-index=0]"):
+        cursor_turnstile(tab)
+
     # Input email verification code
     try:
         message = temp_email.wait_for_message(timeout=120)
         message_text = message.body.strip().replace('\n', '').replace('\r', '').replace('=', '')
         verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
         for idx, digit in enumerate(verify_code, start = 0):
-            tab.ele(f'@data-index={idx}', timeout=30).input(digit, clear=True)
+            tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
             tab.wait(0.1, 0.3)
         cursor_turnstile(tab)
         tab.wait(0.5, 1.5)
@@ -139,7 +142,6 @@ def register_cursor(number, max_workers):
     browser.quit(force=True)
 
     results = [result for result in results if result["token"] is not None]
-    #print(results)
     if len(results)>0:
         formatted_date = datetime.now().strftime("%Y-%m-%d")
 
