@@ -30,7 +30,7 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 
 ## Run in Github Action
 
-### Register accounts. Save the account info and cookie token into csv.
+### Register accounts. Download account info and cookie token from Github Artifact.
 
 Please run the Github Action pipeline with the following parameter:
 - `number`: The account number you want to register
