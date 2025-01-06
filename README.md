@@ -22,9 +22,15 @@ python cursor_register.py --number 10
 ```
 python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --oneapi_channel_url {oneapi_channel_url} --oneapi --number 5
 ```
-- `oneapi_url` is the web address for your oneapi server. 
-- `oneapi_token` is the access token for your oneapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
-- `oneapi_channel_url` is the cursor-api reverse proxy server like [cursor-api](https://github.com/lvguanjun/cursor-api)
+- `oneapi_url`: The web address for your oneapi server. 
+- `oneapi_token`: The access token for your oneapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+- `oneapi_channel_url`: The cursor-api reverse proxy server like [cursor-api](https://github.com/lvguanjun/cursor-api)
+
+### [Github Action] Register accounts. Upload the account cookie token into [One-API](https://github.com/songquanpeng/one-api)
+To run the register in Github Action and ingest the account cookie into ONE API, you need to add the following secret in your repo:
+- `CURSOR_ONEAPI_URL`: For parameter `oneapi_url`
+- `CURSOR_ONEAPI_TOKEN`: For parameter `oneapi_token`
+- `CURSOR_CHANNEL_URL`: For parameter `oneapi_channel_url` 
 
 ## To do
 1. 支持将注册得到的信息上传至数据库
