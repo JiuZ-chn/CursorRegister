@@ -35,7 +35,7 @@ jobs:
           python3 ./cursor_register.py --number ${{ github.event.inputs.number }} --max_workers ${{ github.event.inputs.max_workers }}       
       - name: Upload csv files to artifact
         if: ${{ github.event.inputs.upload_artifact == 'true' }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "Account Info"
           path: "*.csv"
