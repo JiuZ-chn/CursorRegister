@@ -10,9 +10,15 @@ on:
       ingest_to_oneapi:
         description: 'Ingest account tokens to OneAPI or not'
         default: 'false'
+        options:
+          - 'true'
+          - 'false'
       upload_artifact:
         description: 'Upload account artifact or not'
         default: 'false'
+        options:
+          - 'true'
+          - 'false'
 
 jobs:
   build:
