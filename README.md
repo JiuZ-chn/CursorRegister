@@ -38,7 +38,7 @@ To run the register in Github Action and ingest the account cookie into ONE API,
 
 If you are new to Github Action. you can add the secret following [Security Guides](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) 
 
-(Not sure why `max_workers > 1` does not work in Github Action environment)
+(Sometimes `max_workers > 1` does not work in Github Action environment, not sure why it happens)
 
 ## To do
 1. 支持将注册得到的信息上传至数据库
