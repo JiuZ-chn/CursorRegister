@@ -46,9 +46,9 @@ def sign_up(browser):
     # Input first name, last name, email
     for _ in range(retry_times):
         try:
-            tab.ele("@name=first_name").input(first_name)
-            tab.ele("@name=last_name").input(last_name)
-            tab.ele("@name=email").input(email)
+            tab.ele("@name=first_name").input(first_name, clear=True)
+            tab.ele("@name=last_name").input(last_name, clear=True))
+            tab.ele("@name=email").input(email, clear=True))
             tab.ele("@type=submit").click()
             cursor_turnstile(tab)
             tab.wait(0.5, 1.5)
@@ -68,7 +68,7 @@ def sign_up(browser):
     # Input password
     for _ in range(retry_times):
         try:
-            tab.ele('@name=password').input(password)
+            tab.ele('@name=password').input(password, clear=True)
             tab.ele('@type=submit').click()
         
             if tab.ele('This email is not available.'):
@@ -94,7 +94,7 @@ def sign_up(browser):
         message_text = message.body.strip().replace('\n', '').replace('\r', '').replace('=', '')
         verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
         for idx, digit in enumerate(verify_code, start = 0):
-            tab.ele(f'@data-index={idx}', timeout=30).input(digit)
+            tab.ele(f'@data-index={idx}', timeout=30).input(digit, clear=True)
             tab.wait(0.1, 0.3)
         cursor_turnstile(tab)
         tab.wait(0.5, 1.5)
