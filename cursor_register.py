@@ -107,7 +107,7 @@ def sign_up(browser):
     token = cookies.get('WorkosCursorSessionToken', None)
     tab.close()
 
-    if not hide_account_info：
+    if not hide_account_info:
         print("[Register] Cursor Email: " + email)
         print("[Register] Cursor Password: " + password)
         print("[Register] Cursor Token: " + token)
