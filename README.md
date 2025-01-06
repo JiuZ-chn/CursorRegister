@@ -13,12 +13,14 @@ pip install requirements.txt
 ```
 
 ### Register accounts. Save the account info and cookie token into csv.
+
 ```
 python cursor_register.py --number 10
 ```
 - `number` is the account number you want.
 
 ### Register accounts. Upload the account cookie token into [One-API](https://github.com/songquanpeng/one-api)
+
 ```
 python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --oneapi_channel_url {oneapi_channel_url} --oneapi --number 5
 ```
@@ -27,10 +29,13 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 - `oneapi_channel_url`: The cursor-api reverse proxy server like [cursor-api](https://github.com/lvguanjun/cursor-api)
 
 ### [Github Action] Register accounts. Upload the account cookie token into [One-API](https://github.com/songquanpeng/one-api)
+
 To run the register in Github Action and ingest the account cookie into ONE API, you need to add the following secret in your repo:
 - `CURSOR_ONEAPI_URL`: For parameter `oneapi_url`
 - `CURSOR_ONEAPI_TOKEN`: For parameter `oneapi_token`
 - `CURSOR_CHANNEL_URL`: For parameter `oneapi_channel_url` 
+
+(Not sure why `max_workers > 1` does not work in Github Action environment)
 
 ## To do
 1. 支持将注册得到的信息上传至数据库
