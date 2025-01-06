@@ -13,6 +13,7 @@ on:
       upload_artifact:
         description: 'Upload account artifact'
         type: boolean
+        default: true
 
 jobs:
   build:
@@ -25,15 +26,15 @@ jobs:
         run: |
           pip3 install -r ./requirements.txt
       - name: Run script for OneAPI
-        if: ${{ github.event.inputs.ingest_to_oneapi == 'true' }}
+        if: ${{ github.event.inputs.ingest_to_oneapi == true }}
         run: |
           python3 ./cursor_register.py --oneapi --oneapi_url "${{ secrets.CURSOR_ONEAPI_URL }}" --oneapi_token "${{ secrets.CURSOR_ONEAPI_TOKEN }}" --oneapi_channel_url "${{ secrets.CURSOR_CHANNEL_URL }}" --number ${{ github.event.inputs.number }} --max_workers ${{ github.event.inputs.max_workers }} 
       - name: Run script for CSV
-        if: ${{ github.event.inputs.ingest_to_oneapi == 'false' && github.event.inputs.upload_artifact == 'true' }}
+        if: ${{ github.event.inputs.ingest_to_oneapi == false && github.event.inputs.upload_artifact == true }}
         run: |
           python3 ./cursor_register.py --number ${{ github.event.inputs.number }} --max_workers ${{ github.event.inputs.max_workers }}       
       - name: Upload artifact
-        if: ${{ github.event.inputs.upload_artifact == 'true' }}
+        if: ${{ github.event.inputs.upload_artifact == true }}
         uses: actions/upload-artifact@v3
         with:
           name: "Account Info"
