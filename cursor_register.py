@@ -22,6 +22,8 @@ def cursor_turnstile(tab, retry_times = 5):
             challenge_shadow_button.click()
             tab.wait.load_start()
             break
+        if _ == retry_times - 1:
+            print("[Register] Timeout when passing turnstile")
 
 def sign_up(browser):
 
@@ -58,6 +60,7 @@ def sign_up(browser):
 
         # Kill the function since time out 
         if _ == retry_times -1:
+            print("[Register] Timeout when inputing email address")
             return None
     
     # Input password
@@ -80,6 +83,7 @@ def sign_up(browser):
 
         # Kill the function since time out 
         if _ == retry_times -1:
+            print("[Register] Timeout when inputing password")
             return None
 
     # Input email verification code
