@@ -2,8 +2,8 @@
 
 Automatically register a Cursor account and save the account name, password, and token.
 
-Poor network environment has a huge impact on this project. If the registration success rate is low, please consider using a proxy or other network.
-（较差的网络环境对本项目影响巨大，如果注册成功率较低，请考虑使用代理或者使用其他网络）
+Poor network environment has a huge impact on this project. If the registration success rate is low, please consider using a proxy or other network. We provide Github Action pipeline for trial use.
+（较差的网络环境对本项目影响巨大，如果注册成功率较低，请考虑使用代理或者使用其他网络，本项目提供Github Action pipeline以供试用）
 
 ## Run in local
 
