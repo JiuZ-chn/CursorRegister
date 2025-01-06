@@ -101,9 +101,9 @@ def sign_up(browser):
     token = cookies.get('WorkosCursorSessionToken', None)
     tab.close()
 
-    print("Cursor Email: " + email)
-    print("Cursor Password: " + password)
-    print("Cursor Token: " + token)
+    print("[Register] Cursor Email: " + email)
+    print("[Register] Cursor Password: " + password)
+    print("[Register] Cursor Token: " + token)
     return {
         'username': email,
         'password': password,
@@ -175,12 +175,14 @@ if __name__ == "__main__":
     oneapi_channel_url = args.oneapi_channel_url
 
     account_infos = register_cursor(number, max_workers)
-    print(f"Register {len(account_infos)} Accounts Successfully")
+    print(f"[Register] Register {len(account_infos)} Accounts Successfully")
     
     if use_oneapi:
         from tokenManager.oneapi_manager import OneAPIManager
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
-        oneapi.add_channel("Cursor", 
-                           oneapi_channel_url, 
-                           [row['token'] for row in account_infos],
-                           OneAPIManager.cursor_models)
+        response = oneapi.add_channel("Cursor",
+                                      oneapi_channel_url,
+                                      [row['token'] for row in account_infos],
+                                      OneAPIManager.cursor_models)
+        print(f'[OneAPI] Add Channel Request Status Code: {response.status_code}')
+        print(f'[OneAPI] Add Channel Request Response Body: {response.json()}')
