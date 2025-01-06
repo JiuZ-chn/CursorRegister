@@ -18,12 +18,15 @@ hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 
 def cursor_turnstile(tab, retry_times = 5):
     for _ in range(retry_times): # Retry times
-        challenge_shadow_root = tab.ele('@id=cf-turnstile', timeout=30).child().shadow_root
-        challenge_shadow_button = challenge_shadow_root.ele("tag:iframe", timeout=30).ele("tag:body").sr("xpath=//input[@type='checkbox']")
-        if challenge_shadow_button:
-            challenge_shadow_button.click()
-            tab.wait.load_start()
-            break
+        try:
+            challenge_shadow_root = tab.ele('@id=cf-turnstile').child().shadow_root
+            challenge_shadow_button = challenge_shadow_root.ele("tag:iframe", timeout=30).ele("tag:body").sr("xpath=//input[@type='checkbox']")
+            if challenge_shadow_button:
+                challenge_shadow_button.click()
+                tab.wait.load_start()
+                break
+        except:
+            pass
         if _ == retry_times - 1:
             print("[Register] Timeout when passing turnstile")
 
