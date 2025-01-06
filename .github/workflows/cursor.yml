@@ -11,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    env:
+      HIDE_ACCOUNT_INFO: "true"
     steps:
       - uses: actions/checkout@v3
       - name: Install requirements
