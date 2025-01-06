@@ -9,7 +9,7 @@ Automatically register a Cursor account and save the account name, password, and
 The code does not support to run with headless mode now. Please run the python script in Windows platform with UI.
 
 ```
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 ### Register accounts. Save the account info and cookie token into csv.
