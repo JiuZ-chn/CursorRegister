@@ -33,13 +33,16 @@ if __name__ == "__main__":
     oneapi_token = args.oneapi_token
 
     oneapi = OneAPIManager(oneapi_url, oneapi_token)
+
     response_channels = oneapi.get_channels(0, 2147483647)
     channels = response_channels.json()['data']
     channels_id = [channel['id'] for channel in channels]
-    print(f"Channels Count: {len(channels_id)}")
+    print(f"Channel Count: {len(channels_id)}")
+
+    # Remove channel with low quota
     for id in channels_id:
         key = oneapi.get_channel(id).json()['data']['key']
         remain_usage = Cursor.get_remaining_quota(key)
-        if(remain_usage) < 10:
+        if remain_usage < 10:
             oneapi.delete_channel(id)
     
