@@ -11,7 +11,7 @@ on:
         description: 'Ingest account tokens to OneAPI'
         type: boolean
       upload_artifact:
-        description: 'Upload account artifact'
+        description: 'Upload account infos to artifact'
         type: boolean
         default: true
 
