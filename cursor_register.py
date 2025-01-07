@@ -117,7 +117,7 @@ def sign_up(browser):
         return None
 
     if tab.url != CURSOR_URL:
-        print("[Register] Try pass Turnstile for email code page.")
+        #print("[Register] Try pass Turnstile for email code page.")
         cursor_turnstile(tab)
 
     if not tab.wait.url_change(CURSOR_URL, timeout=180):
