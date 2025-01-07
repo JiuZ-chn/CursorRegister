@@ -92,7 +92,7 @@ def sign_up(browser):
             break
 
         # Kill the function since time out 
-        if _ == retry_times -1:
+        if _ == retry_times - 1:
             print("[Register] Timeout when inputing password")
             tab.close()
             return None
