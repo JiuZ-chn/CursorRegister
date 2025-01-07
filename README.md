@@ -10,7 +10,7 @@ Poor network environment has a huge impact on this project. If the registration 
 - Register Cursor accounts and save account, password and token to .csv locally. (注册Cursor账号并保存账号密码Token到本地)
 - Register Cursor accounts upload tokens to One API. (注册Cursor账号并上传Token到One API)
 - Clean up Cursor channels with low balance in One API. (清理One API中额度不足的Cursor账号)
-- The above functions all support Github Action environment. (上述功能均支持Github Action环境)
+- The above features all support to run in Github Action environment. (上述功能均支持Github Action环境)
 
 ## Run in local
 
