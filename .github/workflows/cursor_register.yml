@@ -1,4 +1,4 @@
-name: cursor
+name: Cursor Register
 
 on:
   workflow_dispatch:
