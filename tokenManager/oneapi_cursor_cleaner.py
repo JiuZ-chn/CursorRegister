@@ -24,7 +24,7 @@ class Cursor:
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(description='Cursor Registor')
+    parser = argparse.ArgumentParser()
     parser.add_argument('--oneapi_url', type=str, required=False, help='URL link for One-API website')
     parser.add_argument('--oneapi_token', type=str, required=False, help='Token for One-API website')
 
