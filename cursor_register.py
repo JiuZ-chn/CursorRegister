@@ -8,6 +8,7 @@ from faker import Faker
 from tempmail import EMail
 from DrissionPage import ChromiumOptions, Chromium
 
+CURSOR_URL = "https://www.cursor.com/"
 CURSOR_LOGIN_URL = "https://authenticator.cursor.sh"
 CURSOR_SIGN_UP_URL =  "https://authenticator.cursor.sh/sign-up"
 CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
@@ -55,24 +56,24 @@ def sign_up(browser):
             if tab.ele("xpath=//input[@name='email']").attr("data-valid") != "true":
                 tab.close()
                 return None
-
         except Exception as e:
             print(e)
             tab.close()
             return None
         
         # In password page or data is validated, continue to next page
-        if tab.ele("xpath=//input[@name='password']") or tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
+        if tab.wait.eles_loaded("xpath=//input[@name='password']") or tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
             break
 
         # Kill the function since time out 
-        if _ == retry_times -1:
+        if _ == retry_times - 1:
             print("[Register] Timeout when inputing email address")
             tab.close()
             return None
 
     # If not in password page, try pass turnstile page
-    if not tab.ele("xpath=//input[@name='password']"):
+    if not tab.wait.eles_loaded("xpath=//input[@name='password']"):
+        #print("[Register] Try pass Turnstile for email page")
         cursor_turnstile(tab)
     
     # Input password
@@ -87,7 +88,7 @@ def sign_up(browser):
             return None
 
         # In code verification page or data is validated, continue to next page
-        if tab.ele("xpath=//input[@data-index=0]") or tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
+        if tab.wait.eles_loaded("xpath=//input[@data-index=0]") or tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
             break
 
         # Kill the function since time out 
@@ -97,7 +98,8 @@ def sign_up(browser):
             return None
 
     # If not in verification code page, try pass turnstile page
-    if not tab.ele("xpath=//input[@data-index=0]"):
+    if not tab.wait.eles_loaded("xpath=//input[@data-index=0]"):
+        #print("[Register] Try pass Turnstile for password page.")
         cursor_turnstile(tab)
 
     # Input email verification code
@@ -108,24 +110,31 @@ def sign_up(browser):
         for idx, digit in enumerate(verify_code, start = 0):
             tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
             tab.wait(0.1, 0.3)
-        tab.wait(0.5, 1.5)            
+        tab.wait(0.5, 1.5)
     except Exception as e:
         print(e)
         tab.close()
         return None
 
-    if tab.url != "https://www.cursor.com/":
+    if tab.url != CURSOR_URL:
+        #print("[Register] Try pass Turnstile for email code page.")
         cursor_turnstile(tab)
+
+    if not tab.wait.url_change(CURSOR_URL, timeout=180):
+        print("[Register] Fail to back to home page.")
+        return None
 
     # Get cookie
     cookies = tab.cookies().as_dict()
     token = cookies.get('WorkosCursorSessionToken', None)
-    tab.close()
 
     if not hide_account_info:
-        print("[Register] Cursor Email: " + email)
-        print("[Register] Cursor Password: " + password)
-        print("[Register] Cursor Token: " + token)
+        print(f"[Register] Cursor Email: {email}")
+        print(f"[Register] Cursor Password: {password}")
+        print(f"[Register] Cursor Token: {token}")
+
+    tab.close()
+
     return {
         'username': email,
         'password': password,
@@ -154,7 +163,7 @@ def register_cursor(number, max_workers):
 
     results = [result for result in results if result["token"] is not None]
     #print(results)
-    if len(results)>0:
+    if len(results) > 0:
         formatted_date = datetime.now().strftime("%Y-%m-%d")
 
         csv_file = f"./output_{formatted_date}.csv"
