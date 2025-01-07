@@ -22,6 +22,20 @@ class Cursor:
         usage = response.json()["gpt-4"]
         return usage["maxRequestUsage"] - usage["numRequests"]
 
+    @classmethod
+    def get_trial_remaining_days(cls, token):
+        user = token.split("%3A%3A")[0]
+        url = f"https://www.cursor.com/api/auth/stripe"
+
+        headers = {
+            "Content-Type": "application/json",
+            "Cookie": f"WorkosCursorSessionToken={token}"
+        }
+        response = requests.get(url, headers=headers)
+        remaining_days = response.json().get("daysRemainingOnTrial", -1)
+        return remaining_days
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -37,12 +51,14 @@ if __name__ == "__main__":
     response_channels = oneapi.get_channels(0, 2147483647)
     channels = response_channels.json()['data']
     channels_id = [channel['id'] for channel in channels]
-    print(f"Channel Count: {len(channels_id)}")
+    print(f"[OneAPI] Channel Count: {len(channels_id)}")
 
     # Remove channel with low quota
     for id in channels_id:
         key = oneapi.get_channel(id).json()['data']['key']
-        remain_usage = Cursor.get_remaining_quota(key)
-        if remain_usage < 10:
-            oneapi.delete_channel(id)
-    
+        remaining_quota = Cursor.get_remaining_quota(key)
+        remaining_days = Cursor.get_trial_remaining_days(key)
+        print(f"[OneAPI] Channel {id} Info: Quota = {remaining_quota}. Trial Remaining Days = {remaining_days}")
+        if remaining_quota < 10:# or remaining_days <= 0:
+            quota = oneapi.delete_channel(id)
+            print(f"[OneAPI] Channel {id} Is Deleted.")
