@@ -66,11 +66,9 @@ def sign_up():
             tab.wait(2.5, 4.5)
 
             if tab.ele("xpath=//input[@name='email']").attr("data-valid") != "true":
-                tab.close()
                 return None
         except Exception as e:
             print(e)
-            tab.close()
             return None
 
         # If not in password page, try pass turnstile page
@@ -85,7 +83,6 @@ def sign_up():
         # Kill the function since time out 
         if _ == retry_times - 1:
             print(f"[Register][{thread_id}] Timeout when inputing email address")
-            tab.close()
             return None
     
     # Input password
@@ -97,12 +94,10 @@ def sign_up():
             tab.wait(2.5, 4.5)
             
             if tab.ele("xpath=//input[@name='password']").attr("data-valid") != "true":
-                tab.close()
                 return None
 
         except Exception as e:
             print(e)
-            tab.close()
             return None
     
         # If not in verification code page, try pass turnstile page
@@ -117,7 +112,6 @@ def sign_up():
         # Kill the function since time out 
         if _ == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
-            tab.close()
             return None
 
     # Get email verification code
@@ -127,7 +121,6 @@ def sign_up():
         verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
     except Exception as e:
         print(e)
-        tab.close()
         return None
     
     # Input email verification code
@@ -141,7 +134,6 @@ def sign_up():
             tab.wait(0.5, 1.5)
         except Exception as e:
             print(e)
-            tab.close()
             return None
 
         if tab.url != CURSOR_URL:
@@ -154,7 +146,6 @@ def sign_up():
         # Kill the function since time out 
         if _ == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing email verification code")
-            tab.close()
             return None
 
     # Get cookie
@@ -166,8 +157,7 @@ def sign_up():
         print(f"[Register] Cursor Password: {password}")
         print(f"[Register] Cursor Token: {token}")
 
-    tab.close()
-    browser.quit()
+    browser.quit(force=True, del_data=True)
 
     return {
         'username': email,
@@ -185,7 +175,6 @@ def register_cursor(number, max_workers):
             result = future.result()
             if result is not None:
                 results.append(result)
-    #browser.quit(force=True)
 
     results = [result for result in results if result["token"] is not None]
     #print(results)
@@ -235,7 +224,7 @@ if __name__ == "__main__":
     tokens = list(set([row['token'] for row in account_infos]))
     print(f"[Register] Register {len(tokens)} Accounts Successfully")
     
-    if use_oneapi and len(account_infos)>0:
+    if use_oneapi and len(account_infos) > 0:
         from tokenManager.oneapi_manager import OneAPIManager
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
         response = oneapi.add_channel("Cursor",
