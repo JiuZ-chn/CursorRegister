@@ -31,7 +31,13 @@ def cursor_turnstile(tab, retry_times = 5):
         if _ == retry_times - 1:
             print("[Register] Timeout when passing turnstile")
 
-def sign_up(browser):
+def sign_up(options):
+
+    options = ChromiumOptions()
+    options.auto_port()
+    # Use turnstilePatch from https://github.com/TheFalloutOf76/CDP-bug-MouseEvent-.screenX-.screenY-patcher
+    options.add_extension("turnstilePatch")
+    browser = Chromium(options)
 
     retry_times = 5
 
@@ -161,6 +167,7 @@ def sign_up(browser):
         print(f"[Register] Cursor Token: {token}")
 
     tab.close()
+    browser.quit()
 
     return {
         'username': email,
@@ -170,23 +177,15 @@ def sign_up(browser):
 
 def register_cursor(number, max_workers):
 
-    options = ChromiumOptions()
-    options.auto_port()
-    #options.headless()
-
-    # Use turnstilePatch from https://github.com/TheFalloutOf76/CDP-bug-MouseEvent-.screenX-.screenY-patcher
-    options.add_extension("turnstilePatch")
-    browser = Chromium(options)
-
     # Run the code using multithreading
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(sign_up, browser) for _ in range(number)]
+        futures = [executor.submit(sign_up) for _ in range(number)]
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             if result is not None:
                 results.append(result)
-    browser.quit(force=True)
+    #browser.quit(force=True)
 
     results = [result for result in results if result["token"] is not None]
     #print(results)
@@ -233,6 +232,7 @@ if __name__ == "__main__":
     oneapi_channel_url = args.oneapi_channel_url
 
     account_infos = register_cursor(number, max_workers)
+    account_infos = list(set(account_infos))
     print(f"[Register] Register {len(account_infos)} Accounts Successfully")
     
     if use_oneapi and len(account_infos)>0:
