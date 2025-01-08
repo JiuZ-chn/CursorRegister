@@ -232,15 +232,15 @@ if __name__ == "__main__":
     oneapi_channel_url = args.oneapi_channel_url
 
     account_infos = register_cursor(number, max_workers)
-    account_infos = list(set(account_infos))
-    print(f"[Register] Register {len(account_infos)} Accounts Successfully")
+    tokens = list(set([row['token'] for row in account_infos]))
+    print(f"[Register] Register {len(tokens)} Accounts Successfully")
     
     if use_oneapi and len(account_infos)>0:
         from tokenManager.oneapi_manager import OneAPIManager
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
         response = oneapi.add_channel("Cursor",
                                       oneapi_channel_url,
-                                      [row['token'] for row in account_infos],
+                                      tokens,
                                       OneAPIManager.cursor_models)
         print(f'[OneAPI] Add Channel Request Status Code: {response.status_code}')
         print(f'[OneAPI] Add Channel Request Response Body: {response.json()}')
