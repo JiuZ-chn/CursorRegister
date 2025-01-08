@@ -35,7 +35,6 @@ def cursor_turnstile(tab, retry_times = 5):
 def sign_up(options):
 
     browser = Chromium(options)
-    print(browser.user_data_path)
 
     retry_times = 5
 
