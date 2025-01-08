@@ -58,7 +58,7 @@ if __name__ == "__main__":
         key = oneapi.get_channel(id).json()['data']['key']
         remaining_balance = Cursor.get_remaining_balance(key)
         remaining_days = Cursor.get_trial_remaining_days(key)
-        print(f"[OneAPI] Channel {id} Info: Quota = {remaining_balance}. Trial Remaining Days = {remaining_days}")
+        print(f"[OneAPI] Channel {id} Info: Balance = {remaining_balance}. Trial Remaining Days = {remaining_days}")
         if remaining_balance < 10:# or remaining_days <= 0:
             quota = oneapi.delete_channel(id)
             print(f"[OneAPI] Channel {id} Is Deleted.")
