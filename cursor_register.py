@@ -1,6 +1,7 @@
 import os
 import re
 import csv
+import copy
 import argparse
 import threading
 import concurrent.futures
@@ -31,13 +32,10 @@ def cursor_turnstile(tab, retry_times = 5):
         if _ == retry_times - 1:
             print("[Register] Timeout when passing turnstile")
 
-def sign_up():
+def sign_up(options):
 
-    options = ChromiumOptions()
-    options.auto_port()
-    # Use turnstilePatch from https://github.com/TheFalloutOf76/CDP-bug-MouseEvent-.screenX-.screenY-patcher
-    options.add_extension("turnstilePatch")
     browser = Chromium(options)
+    print(browser.user_data_path)
 
     retry_times = 5
 
@@ -63,16 +61,18 @@ def sign_up():
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
             tab.ele("@type=submit").click()
-            tab.wait(2.5, 4.5)
+            tab.wait(0.5, 2.5)
+            tab.wait.load_start()
 
             if tab.ele("xpath=//input[@name='email']").attr("data-valid") != "true":
+                print(f"[Register][{thread_id}] Email is invalid")
                 return None
         except Exception as e:
             print(e)
             return None
 
         # If not in password page, try pass turnstile page
-        if not tab.wait.eles_loaded("xpath=//input[@name='password']") and tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
+        if not tab.wait.eles_loaded("xpath=//input[@name='password']", timeout=3) and tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
             if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for email page")
             cursor_turnstile(tab)
         
@@ -91,9 +91,11 @@ def sign_up():
             if enable_register_log: print(f"[Register][{thread_id}] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
-            tab.wait(2.5, 4.5)
+            tab.wait(1.5, 2.5)
+            tab.wait.load_start()
             
             if tab.ele("xpath=//input[@name='password']").attr("data-valid") != "true":
+                print(f"[Register][{thread_id}] Pssword is invalid")
                 return None
 
         except Exception as e:
@@ -101,8 +103,8 @@ def sign_up():
             return None
     
         # If not in verification code page, try pass turnstile page
-        if not tab.wait.eles_loaded("xpath=//input[@data-index=0]") and tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
-            if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for password page.")
+        if not tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=3) and tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
+            if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for password page")
             cursor_turnstile(tab)
 
         # In code verification page or data is validated, continue to next page
@@ -167,17 +169,21 @@ def sign_up():
 
 def register_cursor(number, max_workers):
 
+    options = ChromiumOptions()
+    options.auto_port()
+    # Use turnstilePatch from https://github.com/TheFalloutOf76/CDP-bug-MouseEvent-.screenX-.screenY-patcher
+    options.add_extension("turnstilePatch")
+
     # Run the code using multithreading
     results = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(sign_up) for _ in range(number)]
+        futures = [executor.submit(sign_up, copy.deepcopy(options)) for _ in range(number)]
         for future in concurrent.futures.as_completed(futures):
             result = future.result()
             if result is not None:
                 results.append(result)
 
     results = [result for result in results if result["token"] is not None]
-    #print(results)
     if len(results) > 0:
         formatted_date = datetime.now().strftime("%Y-%m-%d")
 
@@ -224,7 +230,7 @@ if __name__ == "__main__":
     tokens = list(set([row['token'] for row in account_infos]))
     print(f"[Register] Register {len(tokens)} Accounts Successfully")
     
-    if use_oneapi and len(account_infos) > 0:
+    if use_oneapi and len(account_infos)>0:
         from tokenManager.oneapi_manager import OneAPIManager
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
         response = oneapi.add_channel("Cursor",
