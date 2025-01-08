@@ -31,7 +31,7 @@ def cursor_turnstile(tab, retry_times = 5):
         if _ == retry_times - 1:
             print("[Register] Timeout when passing turnstile")
 
-def sign_up(options):
+def sign_up():
 
     options = ChromiumOptions()
     options.auto_port()
