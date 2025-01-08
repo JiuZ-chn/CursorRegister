@@ -14,6 +14,7 @@ CURSOR_SIGN_UP_URL =  "https://authenticator.cursor.sh/sign-up"
 CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
+enable_register_log = True
 
 def cursor_turnstile(tab, retry_times = 5):
     for _ in range(retry_times): # Retry times
@@ -47,6 +48,7 @@ def sign_up(browser):
     # Input first name, last name, email
     for _ in range(retry_times):
         try:
+            if enable_register_log: print("[Register] Input first name, last name, email")
             tab.ele("xpath=//input[@name='first_name']").input(first_name, clear=True)
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
@@ -60,9 +62,14 @@ def sign_up(browser):
             print(e)
             tab.close()
             return None
+
+        # If not in password page, try pass turnstile page
+        if not tab.wait.eles_loaded("xpath=//input[@name='password']") and tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
+            if enable_register_log: print("[Register] Try pass Turnstile for email page")
+            cursor_turnstile(tab)
         
         # In password page or data is validated, continue to next page
-        if tab.wait.eles_loaded("xpath=//input[@name='password']") or tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
+        if tab.wait.eles_loaded("xpath=//input[@name='password']"):
             break
 
         # Kill the function since time out 
@@ -70,59 +77,75 @@ def sign_up(browser):
             print("[Register] Timeout when inputing email address")
             tab.close()
             return None
-
-    # If not in password page, try pass turnstile page
-    if not tab.wait.eles_loaded("xpath=//input[@name='password']"):
-        #print("[Register] Try pass Turnstile for email page")
-        cursor_turnstile(tab)
     
     # Input password
     for _ in range(retry_times):
         try:
+            if enable_register_log: print("[Register] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
             tab.wait(2.5, 4.5)
+            
+            if tab.ele("xpath=//input[@name='password']").attr("data-valid") != "true":
+                tab.close()
+                return None
+
+        except Exception as e:
+            print(e)
+            tab.close()
+            return None
+    
+        # If not in verification code page, try pass turnstile page
+        if not tab.wait.eles_loaded("xpath=//input[@data-index=0]") and tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
+            if enable_register_log: print("[Register] Try pass Turnstile for password page.")
+            cursor_turnstile(tab)
+
+        # In code verification page or data is validated, continue to next page
+        if tab.wait.eles_loaded("xpath=//input[@data-index=0]"):
+            break
+
+        # Kill the function since time out 
+        if _ == retry_times - 1:
+            if enable_register_log: print("[Register] Timeout when inputing password")
+            tab.close()
+            return None
+
+    # Get email verification code
+    try:
+        message = temp_email.wait_for_message(timeout=120)
+        message_text = message.body.strip().replace('\n', '').replace('\r', '').replace('=', '')
+        verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
+    except Exception as e:
+        print(e)
+        tab.close()
+        return None
+    
+    # Input email verification code
+    for _ in range(retry_times):
+        try:
+            if enable_register_log: print("[Register] Input  email verification code")
+
+            for idx, digit in enumerate(verify_code, start = 0):
+                tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
+                tab.wait(0.1, 0.3)
+            tab.wait(0.5, 1.5)
         except Exception as e:
             print(e)
             tab.close()
             return None
 
-        # In code verification page or data is validated, continue to next page
-        if tab.wait.eles_loaded("xpath=//input[@data-index=0]") or tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
+        if tab.url != CURSOR_URL:
+            if enable_register_log: print("[Register] Try pass Turnstile for email code page.")
+            cursor_turnstile(tab)
+
+        if tab.wait.url_change(CURSOR_URL, timeout=180):
             break
 
         # Kill the function since time out 
         if _ == retry_times - 1:
-            print("[Register] Timeout when inputing password")
+            if enable_register_log: print("[Register] Timeout when inputing email verification code")
             tab.close()
             return None
-
-    # If not in verification code page, try pass turnstile page
-    if not tab.wait.eles_loaded("xpath=//input[@data-index=0]"):
-        #print("[Register] Try pass Turnstile for password page.")
-        cursor_turnstile(tab)
-
-    # Input email verification code
-    try:
-        message = temp_email.wait_for_message(timeout=120)
-        message_text = message.body.strip().replace('\n', '').replace('\r', '').replace('=', '')
-        verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
-        for idx, digit in enumerate(verify_code, start = 0):
-            tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
-            tab.wait(0.1, 0.3)
-        tab.wait(0.5, 1.5)
-    except Exception as e:
-        print(e)
-        tab.close()
-        return None
-
-    if tab.url != CURSOR_URL:
-        #print("[Register] Try pass Turnstile for email code page.")
-        cursor_turnstile(tab)
-
-    if not tab.wait.url_change(CURSOR_URL, timeout=180):
-        print("[Register] Fail to back to home page.")
-        return None
 
     # Get cookie
     cookies = tab.cookies().as_dict()
