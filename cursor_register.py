@@ -2,6 +2,7 @@ import os
 import re
 import csv
 import argparse
+import threading
 import concurrent.futures
 from datetime import datetime
 from faker import Faker
@@ -33,6 +34,9 @@ def cursor_turnstile(tab, retry_times = 5):
 def sign_up(browser):
 
     retry_times = 5
+
+    # Thread id for debug info
+    thread_id = threading.current_thread().ident
     
     # Get temp email address
     temp_email = EMail()
@@ -48,7 +52,7 @@ def sign_up(browser):
     # Input first name, last name, email
     for _ in range(retry_times):
         try:
-            if enable_register_log: print("[Register] Input first name, last name, email")
+            if enable_register_log: print(f"[Register][{thread_id}] Input first name, last name, email")
             tab.ele("xpath=//input[@name='first_name']").input(first_name, clear=True)
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
@@ -65,7 +69,7 @@ def sign_up(browser):
 
         # If not in password page, try pass turnstile page
         if not tab.wait.eles_loaded("xpath=//input[@name='password']") and tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
-            if enable_register_log: print("[Register] Try pass Turnstile for email page")
+            if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for email page")
             cursor_turnstile(tab)
         
         # In password page or data is validated, continue to next page
@@ -74,14 +78,14 @@ def sign_up(browser):
 
         # Kill the function since time out 
         if _ == retry_times - 1:
-            print("[Register] Timeout when inputing email address")
+            print(f"[Register][{thread_id}] Timeout when inputing email address")
             tab.close()
             return None
     
     # Input password
     for _ in range(retry_times):
         try:
-            if enable_register_log: print("[Register] Input password")
+            if enable_register_log: print(f"[Register][{thread_id}] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
             tab.wait(2.5, 4.5)
@@ -97,7 +101,7 @@ def sign_up(browser):
     
         # If not in verification code page, try pass turnstile page
         if not tab.wait.eles_loaded("xpath=//input[@data-index=0]") and tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
-            if enable_register_log: print("[Register] Try pass Turnstile for password page.")
+            if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for password page.")
             cursor_turnstile(tab)
 
         # In code verification page or data is validated, continue to next page
@@ -106,7 +110,7 @@ def sign_up(browser):
 
         # Kill the function since time out 
         if _ == retry_times - 1:
-            if enable_register_log: print("[Register] Timeout when inputing password")
+            if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
             tab.close()
             return None
 
@@ -123,7 +127,7 @@ def sign_up(browser):
     # Input email verification code
     for _ in range(retry_times):
         try:
-            if enable_register_log: print("[Register] Input  email verification code")
+            if enable_register_log: print(f"[Register][{thread_id}] Input email verification code")
 
             for idx, digit in enumerate(verify_code, start = 0):
                 tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
@@ -135,7 +139,7 @@ def sign_up(browser):
             return None
 
         if tab.url != CURSOR_URL:
-            if enable_register_log: print("[Register] Try pass Turnstile for email code page.")
+            if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for email code page.")
             cursor_turnstile(tab)
 
         if tab.wait.url_change(CURSOR_URL, timeout=180):
@@ -143,7 +147,7 @@ def sign_up(browser):
 
         # Kill the function since time out 
         if _ == retry_times - 1:
-            if enable_register_log: print("[Register] Timeout when inputing email verification code")
+            if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing email verification code")
             tab.close()
             return None
 
