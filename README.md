@@ -9,15 +9,13 @@
 
 Automatically register a Cursor account and save the account name, password, and token.
 
-Poor network environment has a huge impact on this project. If the registration success rate is low, please consider using a proxy or other network. We provide Github Action pipeline for trial use.
-（较差的网络环境对本项目影响巨大，如果注册成功率较低，请考虑使用代理或者使用其他网络，本项目提供Github Action pipeline以供试用）
 
 ## Feature
 
-- Register Cursor accounts and save account, password and token to .csv locally. (注册Cursor账号并保存账号密码Token到本地)
-- Register Cursor accounts upload tokens to One API. (注册Cursor账号并上传Token到One API)
-- Clean up Cursor channels with low balance in One API. (清理One API中额度不足的Cursor账号)
-- The above features all support to run in Github Action environment. (上述功能均支持Github Action环境)
+- Register Cursor accounts and save account, password and token to .csv locally.
+- Register Cursor accounts upload tokens to One API.
+- Clean up Cursor channels with low balance in One API.
+- The above features all support to run in Github Action environment.
 
 ## Run in local
 
