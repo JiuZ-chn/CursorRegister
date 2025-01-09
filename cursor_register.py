@@ -124,7 +124,6 @@ def sign_up(options):
         data = mail.wait_for_new_email(delay=1.0, timeout=120)
         body_text = data["body_text"]
         message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
-        print(message_text)
         verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
         print(e)
