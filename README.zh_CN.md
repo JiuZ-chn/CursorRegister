@@ -16,7 +16,7 @@
 - 注册Cursor账号并保存账号、密码、令牌(token)到本地
 - 注册Cursor账号并上传令牌(token)到One-API
 - 清理One-API中额度不足的Cursor账号
-- 上述功能均支持Github Action环境
+- 上述功能均支持在Github Action中运行
 
 ## 本地运行
 
