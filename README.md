@@ -14,9 +14,9 @@ Poor network environment has a huge impact on this project. If the registration 
 
 ## Run in local
 
-### Install dependency
+### Install dependency **(It's required to use `Python >= 3.10`)**
 
-The code does not support to run with headless mode now. Please run the python script in Windows platform with UI.
+The code does not support to run with headless mode now. Please run the python script in Windows platform with UI. 
 
 ```
 pip install -r requirements.txt
