@@ -64,13 +64,13 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 
 请运行 **`Cursor Register`** 并使用下列参数
 - `number`: 希望注册的账号数量
-- `max_workers`: 线程池的并行度. 推荐在Github Action中使用`max_workers=1`
+- `max_workers`: 线程池的并行度. 推荐在Github Action中使用 `max_workers=1`
 - `Ingest account tokens to OneAPI`: 不选此项，因为在此不必使用One-API服务
 - `Upload account infos to artifact`: 选中此项，以保证数据被上传到工作流程构件(GitHub Artifacts)
  
 ### 注册账号，并将账号令牌(Cookie Token)直接导入到[One-API](https://github.com/songquanpeng/one-api)
 
-为了在GitHub Action中使用One-API服务，你需要在你的仓库中添加如下密钥(secrets)，请参考 [Security Guides](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) 
+为了在GitHub Action中使用One-API服务，你需要在你的仓库中添加如下机密(secrets)，请参考 [Github 安全指南 - 为存储库创建机密](https://docs.github.com/zh/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository)
 
 - `CURSOR_ONEAPI_URL`: 对应参数 `oneapi_url`
 - `CURSOR_ONEAPI_TOKEN`: 对应参数 `oneapi_token`
@@ -78,13 +78,13 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 
 请运行 **`Cursor Register`** 并使用下列参数
 - `number`: 希望注册的账号数量
-- `max_workers`: P线程池的并行度. 推荐在Github Action中使用`max_workers=1`
+- `max_workers`: 线程池的并行度. 推荐在Github Action中使用 `max_workers=1`
 - `Ingest account tokens to OneAPI`: 选中此项，以开启One-API服务
 - `Upload account infos to artifact`: 如果选中，那么数据也将被上传到工作流程构件(GitHub Artifacts)，如果不选则跳过该步骤。
  
 ### 清理[One-API](https://github.com/songquanpeng/one-api)中额度不足的Cursor账号 
 
-请运行 **`OneAPI Cursor Cleaner`**。需要保证已添加了下列密钥(secrets)。
+请运行 **`OneAPI Cursor Cleaner`**。需要保证已添加了下列机密(secrets)。
 
 - `CURSOR_ONEAPI_URL`: 对应参数 `oneapi_url`
 - `CURSOR_ONEAPI_TOKEN`: 对应参数 `oneapi_token`
