@@ -58,7 +58,9 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 
 ### 注册账号，随后并从工作流程构件(GitHub Artifacts)中下载账号信息
 
-适用于手动导入账户令牌(token)或One-API没有公网ip的用户。账号注册完成后需手动从工作流程构件(GitHub Artifacts)中下载账号信息。**务必在下载完成后删除网页中的工作流程构件(GitHub Artifacts)以避免数据泄漏**
+适用于手动导入账户令牌(token)或One-API没有公网ip的用户。账号注册完成后需手动从工作流程构件(GitHub Artifacts)中下载账号信息。
+
+**务必在下载完成后删除网页中的工作流程构件(GitHub Artifacts)以避免数据泄漏**
 
 请运行 **`Cursor Register`** 并使用下列参数
 - `number`: 希望注册的账号数量
