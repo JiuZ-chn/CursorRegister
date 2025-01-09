@@ -22,6 +22,10 @@ jobs:
       HIDE_ACCOUNT_INFO: "true"
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
       - name: Install requirements
         run: |
           pip3 install -r ./requirements.txt
