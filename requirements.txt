@@ -2,4 +2,4 @@ DrissionPage
 faker
 tempmail-python
 temp_mails
-websocket-client==1.7.0
+beautifulsoup4
