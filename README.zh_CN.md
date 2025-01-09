@@ -67,7 +67,7 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 - `max_workers`: 线程池的并行度. 推荐在Github Action中使用`max_workers=1`
 - `Ingest account tokens to OneAPI`: 不选此项，因为在此不必使用One-API服务
 - `Upload account infos to artifact`: 选中此项，以保证数据被上传到工作流程构件(GitHub Artifacts)
-- 
+ 
 ### 注册账号，并将账号令牌(Cookie Token)直接导入到[One-API](https://github.com/songquanpeng/one-api)
 
 为了在GitHub Action中使用One-API服务，你需要在你的仓库中添加如下密钥(secrets)，请参考 [Security Guides](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) 
