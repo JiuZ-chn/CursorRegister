@@ -5,7 +5,7 @@
   </span>
 <p>
 
-  # Cursor Register
+# Cursor Register
 
 Automatically register a Cursor account and save the account name, password, and token.
 
