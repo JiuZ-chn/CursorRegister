@@ -56,7 +56,7 @@ python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_
 
 GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户以供试用。
 
-### 注册账号，随后并从[工作流程构件(GitHub Artifacts)](https://docs.github.com/zh/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/downloading-workflow-artifacts)中下载账号信息
+### 注册账号，随后从[工作流程构件(GitHub Artifacts)](https://docs.github.com/zh/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/downloading-workflow-artifacts)中下载账号信息
 
 适用于手动导入账户令牌(token)或One-API没有公网ip的用户。账号注册完成后需手动从工作流程构件(GitHub Artifacts)中下载账号信息。
 
