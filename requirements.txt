@@ -1,4 +1,4 @@
 DrissionPage
 faker
 tempmail-python
-tempmailio
+temp_mails
