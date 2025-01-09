@@ -1,3 +1,9 @@
+<p align="center">
+  <span>
+   English | 
+   <a href="https://github.com/JiuZ-Chn/CursorRegister/blob/main/README.zh_CN.md">简体中文</a>
+  </span>
+<p>
 # Cursor Register
 
 Automatically register a Cursor account and save the account name, password, and token.
