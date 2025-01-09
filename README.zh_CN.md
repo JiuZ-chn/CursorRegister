@@ -41,7 +41,7 @@ python cursor_register.py --number 3
 python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --oneapi_channel_url {oneapi_channel_url} --oneapi --number 5
 ```
 - `oneapi_url`: One-API 地址
-- `oneapi_token`: One-API 访问令牌(token) [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+- `oneapi_token`: One-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
 - `oneapi_channel_url`: Cursor-API 反代服务地址，需自行搭建Cursor-API反代服务 [cursor-api](https://github.com/lvguanjun/cursor-api)
 
 ### 清除[One-API](https://github.com/songquanpeng/one-api)的低额度渠道 
@@ -50,7 +50,7 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token}
 ```
 - `oneapi_url`: One-API 地址
-- `oneapi_token`: One-API 访问令牌(token) [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+- `oneapi_token`: One-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
 
 ## 在Github Action中运行
 
