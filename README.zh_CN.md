@@ -80,8 +80,8 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 - `number`: 希望注册的账号数量
 - `max_workers`: P线程池的并行度. 推荐在Github Action中使用`max_workers=1`
 - `Ingest account tokens to OneAPI`: 选中此项，以开启One-API服务
-- `Upload account infos to artifact`: 如果选中，那么数据也将被上传到工作流程构件(GitHub Artifacts)，如果不选择跳过上传步骤。
-- 
+- `Upload account infos to artifact`: 如果选中，那么数据也将被上传到工作流程构件(GitHub Artifacts)，如果不选则跳过该步骤。
+ 
 ### 清理[One-API](https://github.com/songquanpeng/one-api)中额度不足的Cursor账号 
 
 请运行 **`OneAPI Cursor Cleaner`**。需要保证已添加了下列密钥(secrets)。
