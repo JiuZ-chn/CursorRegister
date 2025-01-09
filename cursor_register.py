@@ -9,6 +9,7 @@ from datetime import datetime
 from faker import Faker
 from tempmail import EMail
 from DrissionPage import ChromiumOptions, Chromium
+from temp_mails import Tempmail_io
 
 CURSOR_URL = "https://www.cursor.com/"
 CURSOR_LOGIN_URL = "https://authenticator.cursor.sh"
@@ -42,8 +43,10 @@ def sign_up(options):
     thread_id = threading.current_thread().ident
     
     # Get temp email address
-    temp_email = EMail()
-    email = temp_email.address
+    #temp_email = EMail()
+    #email = temp_email.address
+    mail = Tempmail_io()
+    email = mail.email
 
     # Get password and name by faker
     fake = Faker()
@@ -117,9 +120,12 @@ def sign_up(options):
 
     # Get email verification code
     try:
-        message = temp_email.wait_for_message(timeout=120)
-        message_text = message.body.strip().replace('\n', '').replace('\r', '').replace('=', '')
-        verify_code = re.search(r'Your verification code is (\d+)', message_text).group(1).strip()
+        #message = temp_email.wait_for_message(timeout=120)
+        data = mail.wait_for_new_email(delay=1.0, timeout=120)
+        body_text = data["body_text"]
+        message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
+        print(message_text)
+        verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
         print(e)
         return None
