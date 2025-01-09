@@ -7,7 +7,6 @@ import threading
 import concurrent.futures
 from datetime import datetime
 from faker import Faker
-from tempmail import EMail
 from DrissionPage import ChromiumOptions, Chromium
 from temp_mails import Tempmail_io
 
