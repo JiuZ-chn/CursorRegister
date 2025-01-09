@@ -7,6 +7,7 @@ import threading
 import concurrent.futures
 from datetime import datetime
 from faker import Faker
+from tempmail import EMail
 from DrissionPage import ChromiumOptions, Chromium
 from temp_mails import Tempmail_io
 
@@ -117,12 +118,13 @@ def sign_up(options):
 
     # Get email verification code
     try:
+        #message = temp_email.wait_for_message(timeout=120)
         data = mail.wait_for_new_email(delay=1.0, timeout=120)
         body_text = data["body_text"]
         message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
         verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
-        print(f"[Register][[{thread_id}]] Fail to get message from email. Email data: {data}")
+        print(e)
         return None
     
     # Input email verification code
