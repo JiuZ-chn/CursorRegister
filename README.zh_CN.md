@@ -1,3 +1,10 @@
+<p align="center">
+  <span>
+   English | 
+   <a href="https://github.com/JiuZ-Chn/CursorRegister/blob/main/README.md">简体中文</a>
+  </span>
+<p>
+
 # Cursor 注册机
 
 自动注册Cursor账号并保存邮箱、密码和令牌(token)
