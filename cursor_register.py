@@ -60,7 +60,7 @@ def sign_up(options):
     # Input first name, last name, email
     for _ in range(retry_times):
         try:
-            if enable_register_log: print(f"[Register][{thread_id}] Input first name, last name, email")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry_times}] Input first name, last name, email")
             tab.ele("xpath=//input[@name='first_name']").input(first_name, clear=True)
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
@@ -94,7 +94,7 @@ def sign_up(options):
     # Input password
     for _ in range(retry_times):
         try:
-            if enable_register_log: print(f"[Register][{thread_id}] Input password")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry_times}] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
             tab.wait(1.5, 2.5)
@@ -136,7 +136,7 @@ def sign_up(options):
     # Input email verification code
     for _ in range(retry_times):
         try:
-            if enable_register_log: print(f"[Register][{thread_id}] Input email verification code")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry_times}] Input email verification code")
 
             for idx, digit in enumerate(verify_code, start = 0):
                 tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
