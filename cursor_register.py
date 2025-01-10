@@ -19,8 +19,9 @@ hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
 
 def cursor_turnstile(tab, retry_times = 5):
-    for _ in range(retry_times): # Retry times
+    for retry in range(retry_times): # Retry times
         try:
+            if enable_register_log: print(f"[Register][{retry}] Passing Turnstile")
             challenge_shadow_root = tab.ele('@id=cf-turnstile').child().shadow_root
             challenge_shadow_button = challenge_shadow_root.ele("tag:iframe", timeout=30).ele("tag:body").sr("xpath=//input[@type='checkbox']")
             if challenge_shadow_button:
@@ -29,7 +30,7 @@ def cursor_turnstile(tab, retry_times = 5):
                 break
         except:
             pass
-        if _ == retry_times - 1:
+        if retry == retry_times - 1:
             print("[Register] Timeout when passing turnstile")
 
 def sign_up(options):
@@ -74,7 +75,7 @@ def sign_up(options):
 
             # If not in password page, try pass turnstile page
             if not tab.wait.eles_loaded("xpath=//input[@name='password']", timeout=3) and tab.ele("xpath=//input[@name='email']").attr("data-valid") is not None:
-                if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for email page")
+                if enable_register_log: print(f"[Register][{thread_id}][{retry}] Try pass Turnstile for email page")
                 cursor_turnstile(tab)
 
         except Exception as e:
@@ -106,7 +107,7 @@ def sign_up(options):
 
             # If not in verification code page, try pass turnstile page
             if not tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=3) and tab.ele("xpath=//input[@name='password']").attr("data-valid") is not None:
-                if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for password page")
+                if enable_register_log: print(f"[Register][{thread_id}][{retry}] Try pass Turnstile for password page")
                 cursor_turnstile(tab)
 
         except Exception as e:
@@ -147,7 +148,7 @@ def sign_up(options):
             print(e)
 
         if tab.url != CURSOR_URL:
-            if enable_register_log: print(f"[Register][{thread_id}] Try pass Turnstile for email code page.")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry}] Try pass Turnstile for email code page.")
             cursor_turnstile(tab)
 
         if tab.wait.url_change(CURSOR_URL, timeout=180):
