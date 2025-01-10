@@ -56,7 +56,7 @@ if __name__ == "__main__":
         remaining_balance = Cursor.get_remaining_balance(key)
         remaining_days = Cursor.get_trial_remaining_days(key)
         print(f"[OneAPI] Channel {id} Info: Balance = {remaining_balance}. Trial Remaining Days = {remaining_days}")
-        if remaining_balance is None or remaining_days is None:
+        if None in [remaining_balance, remaining_days]:
             print(f"[OneAPI] Invalid resposne")
             continue
         if remaining_balance < 10:# or remaining_days <= 0:
