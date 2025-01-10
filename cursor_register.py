@@ -58,9 +58,9 @@ def sign_up(options):
     tab = browser.new_tab(CURSOR_SIGN_UP_URL)
     browser.wait(0.5, 1.5)
     # Input first name, last name, email
-    for _ in range(retry_times):
+    for retry in range(retry_times):
         try:
-            if enable_register_log: print(f"[Register][{thread_id}][{retry_times}] Input first name, last name, email")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input first name, last name, email")
             tab.ele("xpath=//input[@name='first_name']").input(first_name, clear=True)
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
@@ -87,14 +87,14 @@ def sign_up(options):
             break
 
         # Kill the function since time out 
-        if _ == retry_times - 1:
+        if retry == retry_times - 1:
             print(f"[Register][{thread_id}] Timeout when inputing email address")
             return None
     
     # Input password
-    for _ in range(retry_times):
+    for retry in range(retry_times):
         try:
-            if enable_register_log: print(f"[Register][{thread_id}][{retry_times}] Input password")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
             tab.wait(1.5, 2.5)
@@ -119,7 +119,7 @@ def sign_up(options):
             break
 
         # Kill the function since time out 
-        if _ == retry_times - 1:
+        if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
             return None
 
@@ -134,9 +134,9 @@ def sign_up(options):
         return None
     
     # Input email verification code
-    for _ in range(retry_times):
+    for retry in range(retry_times):
         try:
-            if enable_register_log: print(f"[Register][{thread_id}][{retry_times}] Input email verification code")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input email verification code")
 
             for idx, digit in enumerate(verify_code, start = 0):
                 tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
@@ -154,7 +154,7 @@ def sign_up(options):
             break
 
         # Kill the function since time out 
-        if _ == retry_times - 1:
+        if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing email verification code")
             return None
 
