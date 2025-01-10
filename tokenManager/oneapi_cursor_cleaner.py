@@ -18,7 +18,7 @@ class Cursor:
         response = requests.get(url, headers=headers)
         usage = response.json().get("gpt-4", None)
         if usage is None or "maxRequestUsage" not in usage or "numRequests" not in usage:
-            return -1
+            return None
         return usage["maxRequestUsage"] - usage["numRequests"]
 
     @classmethod
@@ -30,7 +30,7 @@ class Cursor:
             "Cookie": f"WorkosCursorSessionToken={token}"
         }
         response = requests.get(url, headers=headers)
-        remaining_days = response.json().get("daysRemainingOnTrial", -1)
+        remaining_days = response.json().get("daysRemainingOnTrial", None)
         return remaining_days
 
 if __name__ == "__main__":
@@ -56,7 +56,7 @@ if __name__ == "__main__":
         remaining_balance = Cursor.get_remaining_balance(key)
         remaining_days = Cursor.get_trial_remaining_days(key)
         print(f"[OneAPI] Channel {id} Info: Balance = {remaining_balance}. Trial Remaining Days = {remaining_days}")
-        if remaining_balance == -1 or remaining_days == -1:
+        if remaining_balance is None or remaining_days is None:
             print(f"[OneAPI] Invalid resposne")
             continue
         if remaining_balance < 10:# or remaining_days <= 0:
