@@ -34,7 +34,12 @@ def cursor_turnstile(tab, retry_times = 5):
 
 def sign_up(options):
 
-    browser = Chromium(options)
+    # Maybe fail to open the browser
+    try:
+        browser = Chromium(options)
+    except Exception as e:
+        print(e)
+        return None
 
     retry_times = 5
 
@@ -153,6 +158,11 @@ def sign_up(options):
     # Get cookie
     cookies = tab.cookies().as_dict()
     token = cookies.get('WorkosCursorSessionToken', None)
+    if enable_register_log:
+        if token is not None:
+            print(f"[Register][{thread_id}] Register Account Successfully.")
+        else:
+            print(f"[Register][{thread_id}] Register Account Failed.")
 
     if not hide_account_info:
         print(f"[Register] Cursor Email: {email}")
