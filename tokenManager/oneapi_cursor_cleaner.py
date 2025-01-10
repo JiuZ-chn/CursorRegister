@@ -59,6 +59,6 @@ if __name__ == "__main__":
         if remaining_balance == -1 or remaining_days == -1:
             print(f"[OneAPI] Invalid resposne")
             continue
-        if remaining_balance < 10:# or remaining_days <= 0:
-            response = oneapi.delete_channel(id)
-            print(f"[OneAPI] Channel {id} Is Deleted.")
+        #if remaining_balance < 10:# or remaining_days <= 0:
+            #response = oneapi.delete_channel(id)
+            #print(f"[OneAPI] Channel {id} Is Deleted.")
