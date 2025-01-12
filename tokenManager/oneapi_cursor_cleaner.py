@@ -34,10 +34,10 @@ if __name__ == "__main__":
         if None in [remaining_balance, remaining_days]:
             print(f"[OneAPI] Invalid resposne")
             continue
-        if remaining_balance < 10:# or remaining_days <= 0:
-            if delete_low_balance_account:
-                response = oneapi.delete_channel(id)
-                print(f"[OneAPI] Delete Channel {id}: {response.status_code}")
+        if remaining_balance < 10:# or remaining_days <= 0:            
             if disable_low_balance_account:
                 response = oneapi.disable_channel(id)
                 print(f"[OneAPI] Disable Channel {id}: {response.status_code}")
+            if delete_low_balance_account:
+                response = oneapi.delete_channel(id)
+                print(f"[OneAPI] Delete Channel {id}: {response.status_code}")
