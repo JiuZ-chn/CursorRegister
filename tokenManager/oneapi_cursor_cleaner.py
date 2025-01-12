@@ -1,47 +1,23 @@
-# The code is used to delete low quota cursor account in one-api service
+# The script is used to manage low balance Cursor accounts in one-api service
 
 import argparse
-import requests
+
 from oneapi_manager import OneAPIManager
-
-class Cursor:
-
-    @classmethod
-    def get_remaining_balance(cls, token):
-        user = token.split("%3A%3A")[0]
-        url = f"https://www.cursor.com/api/usage?user={user}"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Cookie": f"WorkosCursorSessionToken={token}"
-        }
-        response = requests.get(url, headers=headers)
-        usage = response.json().get("gpt-4", None)
-        if usage is None or "maxRequestUsage" not in usage or "numRequests" not in usage:
-            return None
-        return usage["maxRequestUsage"] - usage["numRequests"]
-
-    @classmethod
-    def get_trial_remaining_days(cls, token):
-        url = f"https://www.cursor.com/api/auth/stripe"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Cookie": f"WorkosCursorSessionToken={token}"
-        }
-        response = requests.get(url, headers=headers)
-        remaining_days = response.json().get("daysRemainingOnTrial", None)
-        return remaining_days
+from cursor import Cursor
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--oneapi_url', type=str, required=False, help='URL link for One-API website')
     parser.add_argument('--oneapi_token', type=str, required=False, help='Token for One-API website')
+    parser.add_argument('--disable_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
+    parser.add_argument('--delete_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
 
     args = parser.parse_args()
     oneapi_url = args.oneapi_url
     oneapi_token = args.oneapi_token
+    disable_low_balance_accounts = args.disable_low_balance_accounts 
+    delete_low_balance_accounts = args.delete_low_balance_accounts
 
     oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
@@ -60,5 +36,9 @@ if __name__ == "__main__":
             print(f"[OneAPI] Invalid resposne")
             continue
         if remaining_balance < 10:# or remaining_days <= 0:
-            response = oneapi.delete_channel(id)
-            print(f"[OneAPI] Channel {id} Is Deleted.")
+            if disable_low_balance_accounts:
+                response = oneapi.disable_channel(id)
+                print(f"[OneAPI] Disable Channel {id}: {response.status_code}")
+            if delete_low_balance_accounts:
+                response = oneapi.delete_channel(id)
+                print(f"[OneAPI] Delete Channel {id}: {response.status_code}")
