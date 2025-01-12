@@ -105,9 +105,8 @@ def sign_up(options):
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
             tab.wait(1.5, 2.5)
-            tab.wait.load_start()
 
-            email_data = mail.wait_for_new_email(delay=1.0, timeout=15)
+            email_data = mail.wait_for_new_email(delay=1.0, timeout=25)
 
             # In code verification page or data is validated, continue to next page
             if tab.wait.eles_loaded("xpath=//input[@data-index=0]"):
