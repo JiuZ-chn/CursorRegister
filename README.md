@@ -43,13 +43,15 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 - `oneapi_token`: The access token for your oneapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
 - `oneapi_channel_url`: The cursor-api reverse proxy server like [cursor-api](https://github.com/lvguanjun/cursor-api)
 
-### Clean up low balance Cursor channels in [One-API](https://github.com/songquanpeng/one-api)
+### Manage low balance Cursor channels in [One-API](https://github.com/songquanpeng/one-api)
 
 ```
-python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token}
+python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --disable_low_balance_accounts {disable_low_balance_accounts} --delete_low_balance_accounts {delete_low_balance_accounts}
 ```
 - `oneapi_url`: The web address for your oneapi server. 
 - `oneapi_token`: The access token for your oneapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+- `disable_low_balance_accounts`: `True` or `False` to disable the low balance accounts in One-API
+- `delete_low_balance_accounts`: `True` or `False` to delete the low balance accounts in One-API
 
 ## Run in Github Action
 
