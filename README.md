@@ -14,7 +14,7 @@ Automatically register a Cursor account and save the account name, password, and
 
 - Register Cursor accounts and save account, password and token to .csv locally.
 - Register Cursor accounts upload tokens to One API.
-- Clean up Cursor channels with low balance in One API.
+- Manage Cursor channels with low balance in One API.
 - The above features all support to run in Github Action environment.
 
 ## Run in local
