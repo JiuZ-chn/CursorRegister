@@ -1,6 +1,7 @@
-# The code is used to delete low quota cursor account in one-api service
+# The script is used to manage low balance Cursor accounts in one-api service
 
 import argparse
+
 from oneapi_manager import OneAPIManager
 from cursor import Cursor
 
@@ -9,8 +10,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--oneapi_url', type=str, required=False, help='URL link for One-API website')
     parser.add_argument('--oneapi_token', type=str, required=False, help='Token for One-API website')
-    parser.add_argument('--disable_low_balance_account', action='store_true', help='Enable One-API or not')
-    parser.add_argument('--delete_low_balance_account', action='store_true', help='Enable One-API or not')
+    parser.add_argument('--disable_low_balance_account', default=False, type=lambda x: (str(x).lower() == 'true'))
+    parser.add_argument('--delete_low_balance_account', default=False, type=lambda x: (str(x).lower() == 'true'))
 
     args = parser.parse_args()
     oneapi_url = args.oneapi_url
@@ -34,10 +35,10 @@ if __name__ == "__main__":
         if None in [remaining_balance, remaining_days]:
             print(f"[OneAPI] Invalid resposne")
             continue
-        if remaining_balance < 10:# or remaining_days <= 0:            
-            if disable_low_balance_account:
-                response = oneapi.disable_channel(id)
-                print(f"[OneAPI] Disable Channel {id}: {response.status_code}")
+        if remaining_balance < 10:# or remaining_days <= 0:
             if delete_low_balance_account:
                 response = oneapi.delete_channel(id)
                 print(f"[OneAPI] Delete Channel {id}: {response.status_code}")
+            if disable_low_balance_account:
+                response = oneapi.disable_channel(id)
+                print(f"[OneAPI] Disable Channel {id}: {response.status_code}")
