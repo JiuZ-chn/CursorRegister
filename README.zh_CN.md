@@ -82,12 +82,16 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 - `Ingest account tokens to OneAPI`: 选中此项，以开启One-API服务
 - `Upload account infos to artifact`: 如果选中，那么数据也将被上传到工作流程构件(GitHub Artifacts)，如果不选则跳过该步骤。
  
-### 清理[One-API](https://github.com/songquanpeng/one-api)中额度不足的Cursor账号 
+### 管理[One-API](https://github.com/songquanpeng/one-api)中额度不足的Cursor账号 
 
-请运行 **`OneAPI Cursor Cleaner`**。需要保证已添加了下列机密(secrets)。
+请运行 **`OneAPI Cursor Cleaner`**。需要先保证已添加了下列机密(secrets)。
 
 - `CURSOR_ONEAPI_URL`: 对应参数 `oneapi_url`
 - `CURSOR_ONEAPI_TOKEN`: 对应参数 `oneapi_token`
+
+参数：
+- `Disable Low Balance Accounts`: 是否禁用额度较低的渠道
+- `Delete Low Balance Accounts`: 是否删除额度较低的渠道
 
 ## 计划
 - 修复多线程模式下可能存在的某些bugs。（众所周知多线程很容易出问题）
