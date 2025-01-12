@@ -77,12 +77,17 @@ Please run the Github Action pipeline **`Cursor Register`** with the following p
 - `Ingest account tokens to OneAPI`: Mark as `☑` to enable One-API service.
 - `Upload account infos to artifact`: `☑` for uploeading the artifact and `☑` will skip this step
 
-### Clean up low balance Cursor channels in [One-API](https://github.com/songquanpeng/one-api)
+### Manage low balance Cursor channels in [One-API](https://github.com/songquanpeng/one-api)
 
-Please run the Github Action pipeline **`OneAPI Cursor Cleaner`**. Before runnign the pipeline, you need to add the following secrets in your repo.
+Before runnign the pipeline, you need to add the following secrets in your repo.
 
 - `CURSOR_ONEAPI_URL`: For parameter `oneapi_url`
 - `CURSOR_ONEAPI_TOKEN`: For parameter `oneapi_token`
+
+Please run the Github Action pipeline **`OneAPI Cursor Cleaner`**.
+
+- `Disable Low Balance Accounts`: Disable low balance accounts or not
+- `Delete Low Balance Accounts`: Delete low balance accounts or not
 
 ## Todo
 - Maybe some bugs when running in multiple threading mode (`max_workers` > 1), but not sure. :(
