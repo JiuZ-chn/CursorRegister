@@ -98,6 +98,7 @@ def sign_up(options):
             return None
     
     # Input password
+    email_data = None
     for retry in range(retry_times):
         try:
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input password")
@@ -105,6 +106,8 @@ def sign_up(options):
             tab.ele('@type=submit').click()
             tab.wait(1.5, 2.5)
             tab.wait.load_start()
+
+            email_data = mail.wait_for_new_email(delay=1.0, timeout=15)
 
             # In code verification page or data is validated, continue to next page
             if tab.wait.eles_loaded("xpath=//input[@data-index=0]"):
@@ -131,8 +134,8 @@ def sign_up(options):
 
     # Get email verification code
     try:
-        data = mail.wait_for_new_email(delay=1.0, timeout=120)
-        body_text = data["body_text"]
+        email_data = mail.wait_for_new_email(delay=1.0, timeout=15) if email_data is None else email_data
+        body_text = email_data["body_text"]
         message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
         verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
