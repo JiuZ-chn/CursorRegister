@@ -75,7 +75,7 @@ def sign_up(options):
                 return None
             
             # In password page or data is validated, continue to next page
-            if tab.wait.eles_loaded("xpath=//input[@name='password']"):
+            if tab.wait.eles_loaded("xpath=//input[@name='password']", timeout=3):
                 print(f"[Register][{thread_id}] Continue to password page")
                 break
             # If not in password page, try pass turnstile page
@@ -108,7 +108,7 @@ def sign_up(options):
             email_data = mail.wait_for_new_email(delay=1.0, timeout=25)
 
             # In code verification page or data is validated, continue to next page
-            if tab.wait.eles_loaded("xpath=//input[@data-index=0]"):
+            if  email_data is not None or tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=3):
                 print(f"[Register][{thread_id}] Continue to email code page")
                 break
             # If not in verification code page, try pass turnstile page
