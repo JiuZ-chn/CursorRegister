@@ -1,47 +1,22 @@
 # The code is used to delete low quota cursor account in one-api service
 
 import argparse
-import requests
 from oneapi_manager import OneAPIManager
-
-class Cursor:
-
-    @classmethod
-    def get_remaining_balance(cls, token):
-        user = token.split("%3A%3A")[0]
-        url = f"https://www.cursor.com/api/usage?user={user}"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Cookie": f"WorkosCursorSessionToken={token}"
-        }
-        response = requests.get(url, headers=headers)
-        usage = response.json().get("gpt-4", None)
-        if usage is None or "maxRequestUsage" not in usage or "numRequests" not in usage:
-            return -1
-        return usage["maxRequestUsage"] - usage["numRequests"]
-
-    @classmethod
-    def get_trial_remaining_days(cls, token):
-        url = f"https://www.cursor.com/api/auth/stripe"
-
-        headers = {
-            "Content-Type": "application/json",
-            "Cookie": f"WorkosCursorSessionToken={token}"
-        }
-        response = requests.get(url, headers=headers)
-        remaining_days = response.json().get("daysRemainingOnTrial", -1)
-        return remaining_days
+from cursor import Cursor
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--oneapi_url', type=str, required=False, help='URL link for One-API website')
     parser.add_argument('--oneapi_token', type=str, required=False, help='Token for One-API website')
+    parser.add_argument('--disable_low_balance_account', action='store_true', help='Enable One-API or not')
+    parser.add_argument('--delete_low_balance_account', action='store_true', help='Enable One-API or not')
 
     args = parser.parse_args()
     oneapi_url = args.oneapi_url
     oneapi_token = args.oneapi_token
+    disable_low_balance_account = args.disable_low_balance_account 
+    delete_low_balance_account = args.delete_low_balance_account 
 
     oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
@@ -56,9 +31,13 @@ if __name__ == "__main__":
         remaining_balance = Cursor.get_remaining_balance(key)
         remaining_days = Cursor.get_trial_remaining_days(key)
         print(f"[OneAPI] Channel {id} Info: Balance = {remaining_balance}. Trial Remaining Days = {remaining_days}")
-        if remaining_balance == -1 or remaining_days == -1:
+        if None in [remaining_balance, remaining_days]:
             print(f"[OneAPI] Invalid resposne")
             continue
-        #if remaining_balance < 10:# or remaining_days <= 0:
-            #response = oneapi.delete_channel(id)
-            #print(f"[OneAPI] Channel {id} Is Deleted.")
+        if remaining_balance < 10:# or remaining_days <= 0:
+            if delete_low_balance_account:
+                response = oneapi.delete_channel(id)
+                print(f"[OneAPI] Delete Channel {id}: {response.status_code}")
+            if disable_low_balance_account:
+                response = oneapi.disable_channel(id)
+                print(f"[OneAPI] Disable Channel {id}: {response.status_code}")
