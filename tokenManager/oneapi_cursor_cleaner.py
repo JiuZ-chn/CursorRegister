@@ -10,14 +10,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--oneapi_url', type=str, required=False, help='URL link for One-API website')
     parser.add_argument('--oneapi_token', type=str, required=False, help='Token for One-API website')
-    parser.add_argument('--disable_low_balance_account', default=False, type=lambda x: (str(x).lower() == 'true'))
-    parser.add_argument('--delete_low_balance_account', default=False, type=lambda x: (str(x).lower() == 'true'))
+    parser.add_argument('--disable_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
+    parser.add_argument('--delete_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
 
     args = parser.parse_args()
     oneapi_url = args.oneapi_url
     oneapi_token = args.oneapi_token
-    disable_low_balance_account = args.disable_low_balance_account 
-    delete_low_balance_account = args.delete_low_balance_account 
+    disable_low_balance_accounts = args.disable_low_balance_accounts 
+    delete_low_balance_accounts = args.delete_low_balance_accounts
 
     oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
@@ -36,9 +36,9 @@ if __name__ == "__main__":
             print(f"[OneAPI] Invalid resposne")
             continue
         if remaining_balance < 10:# or remaining_days <= 0:
-            if delete_low_balance_account:
+            if delete_low_balance_accounts:
                 response = oneapi.delete_channel(id)
                 print(f"[OneAPI] Delete Channel {id}: {response.status_code}")
-            if disable_low_balance_account:
+            if disable_low_balance_accounts:
                 response = oneapi.disable_channel(id)
                 print(f"[OneAPI] Disable Channel {id}: {response.status_code}")
