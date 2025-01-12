@@ -44,13 +44,15 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 - `oneapi_token`: One-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
 - `oneapi_channel_url`: Cursor-API 反代服务地址，需自行搭建Cursor-API反代服务 [cursor-api](https://github.com/lvguanjun/cursor-api)
 
-### 清除[One-API](https://github.com/songquanpeng/one-api)的低额度渠道 
+### 管理[One-API](https://github.com/songquanpeng/one-api)的低额度渠道 
 
 ```
-python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token}
+python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --disable_low_balance_accounts {disable_low_balance_accounts} --delete_low_balance_accounts {delete_low_balance_accounts}
 ```
 - `oneapi_url`: One-API 地址
 - `oneapi_token`: One-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+- `disable_low_balance_accounts`: `True` 或 `False`，禁用One-API中的低额度账号
+- `delete_low_balance_accounts`: `True` 或 `False`，删除One-API中的低额度账号
 
 ## 在Github Action中运行
 
