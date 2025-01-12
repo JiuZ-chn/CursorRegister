@@ -84,3 +84,23 @@ class OneAPIManager:
 
         response = requests.delete(url, headers=self.headers)
         return response
+    
+    def enable_channel(self, id):
+        url = self.base_url + f"/api/channel"
+        data = {
+            "id": id,
+            "status": 1
+        }
+
+        response = requests.put(url, json=data, headers=self.headers)
+        return response
+
+    def disable_channel(self, id):
+        url = self.base_url + f"/api/channel"
+        data = {
+            "id": id,
+            "status": 2
+        }
+
+        response = requests.put(url, json=data, headers=self.headers)
+        return response
