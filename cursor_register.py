@@ -56,12 +56,13 @@ def sign_up(options):
     password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
     first_name, last_name = fake.name().split(' ')[0:2]
 
-    tab = browser.new_tab(CURSOR_SIGN_UP_URL)
+    tab = None
     browser.wait(0.5, 1.5)
     # Input first name, last name, email
     for retry in range(retry_times):
         try:
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input first name, last name, email")
+            tab = browser.new_tab(CURSOR_SIGN_UP_URL)
             tab.ele("xpath=//input[@name='first_name']").input(first_name, clear=True)
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
