@@ -104,7 +104,6 @@ def sign_up(options):
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
-            tab.wait(1.5, 2.5)
 
             email_data = mail.wait_for_new_email(delay=1.0, timeout=25)
 
