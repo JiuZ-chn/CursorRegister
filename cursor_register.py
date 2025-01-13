@@ -147,7 +147,7 @@ def sign_up(options):
         message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
         verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
-        print(f"[Register][{thread_id}] Fail to get code from email. Email data: {data}")
+        print(f"[Register][{thread_id}] Fail to get code from email.")
         return None
     finally:
         email_thread.join()
