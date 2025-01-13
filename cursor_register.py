@@ -2,7 +2,7 @@ import os
 import re
 import csv
 import copy
-import asyncio
+import queue
 import argparse
 import threading
 import concurrent.futures
@@ -38,9 +38,9 @@ def cursor_turnstile(tab, retry_times = 5):
 
 def sign_up(options):
 
-    async def wait_for_new_email_async(mail, queue, timeout=300):
-        data = mail.wait_for_new_email(delay=0.5, timeout=timeout)
-        await queue.put(data)
+    def wait_for_new_email_thread(mail, queue, timeout=300):
+        data = mail.wait_for_new_email(delay=1, timeout=timeout)
+        queue.put(copy.deepcopy(data))
 
     # Maybe fail to open the browser
     try:
@@ -50,8 +50,6 @@ def sign_up(options):
         return None
 
     retry_times = 5
-
-    # Thread id for debug info
     thread_id = threading.current_thread().ident
     
     # Get temp email address
@@ -63,12 +61,11 @@ def sign_up(options):
     password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
     first_name, last_name = fake.name().split(' ')[0:2]
 
-    queue = asyncio.Queue()
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    
-    email_code_task = loop.create_task(wait_for_new_email_async(mail, queue))
-    
+    email_queue = queue.Queue()
+    email_thread = threading.Thread(target=wait_for_new_email_thread, args=(mail, email_queue, ))
+    email_thread.daemon = True
+    email_thread.start()
+
     tab = None
     # Input first name, last name, email
     for retry in range(retry_times):
@@ -138,23 +135,23 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
+
             return None
+    import time
+    time.sleep(5)
 
     # Get email verification code
     try:
-        data = loop.run_until_complete(asyncio.wait_for(queue.get(), timeout=120))
+        data = email_queue.get(timeout=60)
         body_text = data["body_text"]
         message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
         verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email. Email data: {data}")
-        email_code_task.cancel()
-        try:
-            loop.run_until_complete(email_code_task)
-        except asyncio.CancelledError:
-            pass
         return None
-    
+    finally:
+        email_thread.join()
+
     # Input email verification code
     for retry in range(retry_times):
         try:
