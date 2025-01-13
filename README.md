@@ -21,8 +21,6 @@ Automatically register a Cursor account and save the account name, password, and
 
 ### Install dependency **(It's required to use `Python >= 3.10`)**
 
-The code does not support to run with headless mode now. Please run the python script in Windows platform with UI. 
-
 ```
 pip install -r requirements.txt
 ```
