@@ -40,6 +40,8 @@ def sign_up(options):
 
     def wait_for_new_email_thread(mail, queue, timeout=300):
         data = mail.wait_for_new_email(delay=0.5, timeout=timeout)
+        if data is not None:
+            print("Get email code data")
         queue.put(copy.deepcopy(data))
 
     # Maybe fail to open the browser
@@ -148,8 +150,6 @@ def sign_up(options):
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email. Email data: {data}")
         return None
-    finally:
-        email_thread.join()
 
     # Input email verification code
     for retry in range(retry_times):
