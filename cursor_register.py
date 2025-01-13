@@ -39,10 +39,13 @@ def cursor_turnstile(tab, retry_times = 5):
 def sign_up(options):
 
     def wait_for_new_email_thread(mail, queue, timeout=300):
-        data = mail.wait_for_new_email(delay=0.5, timeout=timeout)
-        if data is not None:
-            print("Get email code data")
-        queue.put(copy.deepcopy(data))
+        for i in range(30):
+            print("[Register] Try to get email code")
+            data = mail.wait_for_new_email(delay=0.5, timeout=10)
+            if data is not None:
+                print("[Register] Get Email Code Data Successfully")
+                queue.put(copy.deepcopy(data))
+                break
 
     # Maybe fail to open the browser
     try:
@@ -50,6 +53,8 @@ def sign_up(options):
     except Exception as e:
         print(e)
         return None
+    
+    print("[Test Log]")
 
     retry_times = 5
     thread_id = threading.current_thread().ident
