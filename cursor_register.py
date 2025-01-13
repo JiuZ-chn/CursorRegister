@@ -21,6 +21,7 @@ enable_register_log = True
 def cursor_turnstile(tab, retry_times = 5):
     for retry in range(retry_times): # Retry times
         try:
+            tab.run_js("try { turnstile.reset() } catch(e) { }")
             if enable_register_log: print(f"[Register][{retry}] Passing Turnstile")
             challenge_shadow_root = tab.ele('@id=cf-turnstile').child().shadow_root
             challenge_shadow_button = challenge_shadow_root.ele("tag:iframe", timeout=30).ele("tag:body").sr("xpath=//input[@type='checkbox']")
@@ -187,6 +188,16 @@ def register_cursor(number, max_workers):
     options.auto_port()
     # Use turnstilePatch from https://github.com/TheFalloutOf76/CDP-bug-MouseEvent-.screenX-.screenY-patcher
     options.add_extension("turnstilePatch")
+    options.headless()
+
+    from sys import platform
+    if platform == "linux" or platform == "linux2":
+        platformIdentifier = "X11; Linux x86_64"
+    elif platform == "darwin":
+        platformIdentifier = "Macintosh; Intel Mac OS X 10_15_7"
+    elif platform == "win32":
+        platformIdentifier = "Windows NT 10.0; Win64; x64"
+    options.set_user_agent(f"Mozilla/5.0 ({platformIdentifier}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
 
     # Run the code using multithreading
     results = []

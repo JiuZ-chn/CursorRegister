@@ -22,8 +22,6 @@
 
 ### 安装依赖 **(务必使用 `Python >= 3.10`)**
 
-本项目可能无法在浏览器无头(headless)模式下运行，请尽可能使用Windows桌面环境。不保证在无UI界面的系统中的运行状况。
-
 ```
 pip install -r requirements.txt
 ```
