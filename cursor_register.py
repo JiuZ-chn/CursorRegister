@@ -19,7 +19,6 @@ CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
 
-
 def cursor_turnstile(tab, retry_times = 5):
     thread_id = threading.current_thread().ident
 
@@ -215,6 +214,7 @@ def register_cursor(number, max_workers):
                 results.append(result)
 
     results = [result for result in results if result["token"] is not None]
+
     if len(results) > 0:
         formatted_date = datetime.now().strftime("%Y-%m-%d")
 
