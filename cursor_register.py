@@ -136,7 +136,6 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
-
             return None
 
     # Get email verification code
