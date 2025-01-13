@@ -66,12 +66,12 @@ def sign_up(options):
     email_thread.daemon = True
     email_thread.start()
 
-    tab = None
+    tab = browser.new_tab(CURSOR_SIGN_UP_URL)
     # Input first name, last name, email
     for retry in range(retry_times):
         try:
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input first name, last name, email")
-            tab = browser.new_tab(CURSOR_SIGN_UP_URL)
+            tab.refresh()
             tab.ele("xpath=//input[@name='first_name']").input(first_name, clear=True)
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
