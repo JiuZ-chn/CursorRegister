@@ -39,7 +39,7 @@ def cursor_turnstile(tab, retry_times = 5):
 def sign_up(options):
 
     def wait_for_new_email_thread(mail, queue, timeout=300):
-        data = mail.wait_for_new_email(delay=1, timeout=timeout)
+        data = mail.wait_for_new_email(delay=0.5, timeout=timeout)
         queue.put(copy.deepcopy(data))
 
     # Maybe fail to open the browser
@@ -113,6 +113,7 @@ def sign_up(options):
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
             tab.wait(0.5, 2.5)
+            tab.wait.load_start()
 
             # In code verification page or data is validated, continue to next page
             if tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=3):
@@ -137,8 +138,6 @@ def sign_up(options):
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
 
             return None
-    import time
-    time.sleep(5)
 
     # Get email verification code
     try:
