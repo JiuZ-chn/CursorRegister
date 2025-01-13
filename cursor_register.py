@@ -2,6 +2,7 @@ import os
 import re
 import csv
 import copy
+import asyncio
 import argparse
 import threading
 import concurrent.futures
@@ -18,10 +19,13 @@ CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
 
+
 def cursor_turnstile(tab, retry_times = 5):
+    thread_id = threading.current_thread().ident
+
     for retry in range(retry_times): # Retry times
         try:
-            if enable_register_log: print(f"[Register][{retry}] Passing Turnstile")
+            if enable_register_log: print(f"[Register][{thread_id}][{retry}] Passing Turnstile")
             challenge_shadow_root = tab.ele('@id=cf-turnstile').child().shadow_root
             challenge_shadow_button = challenge_shadow_root.ele("tag:iframe", timeout=30).ele("tag:body").sr("xpath=//input[@type='checkbox']")
             if challenge_shadow_button:
@@ -34,6 +38,10 @@ def cursor_turnstile(tab, retry_times = 5):
             print("[Register] Timeout when passing turnstile")
 
 def sign_up(options):
+
+    async def wait_for_new_email_async(mail, queue, timeout=300):
+        data = mail.wait_for_new_email(delay=1.0, timeout=300)
+        await queue.put(data)
 
     # Maybe fail to open the browser
     try:
@@ -56,8 +64,13 @@ def sign_up(options):
     password = fake.password(length=12, special_chars=True, digits=True, upper_case=True, lower_case=True)
     first_name, last_name = fake.name().split(' ')[0:2]
 
+    queue = asyncio.Queue()
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    
+    loop.create_task(wait_for_new_email_async(mail, queue))
+    
     tab = None
-    browser.wait(0.5, 1.5)
     # Input first name, last name, email
     for retry in range(retry_times):
         try:
@@ -98,17 +111,14 @@ def sign_up(options):
             return None
     
     # Input password
-    email_data = None
     for retry in range(retry_times):
         try:
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
 
-            email_data = mail.wait_for_new_email(delay=1.0, timeout=25)
-
             # In code verification page or data is validated, continue to next page
-            if  email_data is not None or tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=3):
+            if tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=3):
                 print(f"[Register][{thread_id}] Continue to email code page")
                 break
             # If not in verification code page, try pass turnstile page
@@ -132,12 +142,12 @@ def sign_up(options):
 
     # Get email verification code
     try:
-        email_data = mail.wait_for_new_email(delay=1.0, timeout=15) if email_data is None else email_data
-        body_text = email_data["body_text"]
+        data = loop.run_until_complete(asyncio.wait_for(queue.get(), timeout=120))
+        body_text = data["body_text"]
         message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
         verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
-        print(f"[Register][{thread_id}] Fail to get code from email. Email data: {email_data}")
+        print(f"[Register][{thread_id}] Fail to get code from email. Email data: {data}")
         return None
     
     # Input email verification code
@@ -250,7 +260,7 @@ if __name__ == "__main__":
     tokens = list(set([row['token'] for row in account_infos]))
     print(f"[Register] Register {len(tokens)} Accounts Successfully")
     
-    if use_oneapi and len(account_infos)>0:
+    if use_oneapi and len(account_infos) > 0:
         from tokenManager.oneapi_manager import OneAPIManager
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
         response = oneapi.add_channel("Cursor",
