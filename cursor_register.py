@@ -76,15 +76,14 @@ def sign_up(options):
             tab.ele("xpath=//input[@name='last_name']").input(last_name, clear=True)
             tab.ele("xpath=//input[@name='email']").input(email, clear=True)
             tab.ele("@type=submit").click()
-            tab.wait(0.5, 2.5)
             tab.wait.load_start()
 
-            if tab.ele("xpath=//input[@name='email']").attr("data-invalid") == "true":
-                print(f"[Register][{thread_id}] Email is invalid")
-                return None
+            #if tab.ele("xpath=//input[@name='email']").attr("data-invalid") == "true":
+            #    print(f"[Register][{thread_id}] Email is invalid")
+            #    return None
             
             # In password page or data is validated, continue to next page
-            if tab.wait.eles_loaded("xpath=//input[@name='password']", timeout=3):
+            if tab.wait.eles_loaded("xpath=//input[@name='password']", timeout=5):
                 print(f"[Register][{thread_id}] Continue to password page")
                 break
             # If not in password page, try pass turnstile page
@@ -112,10 +111,10 @@ def sign_up(options):
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input password")
             tab.ele("xpath=//input[@name='password']").input(password, clear=True)
             tab.ele('@type=submit').click()
-            tab.wait(0.5, 2.5)
+            tab.wait.load_start()
 
             # In code verification page or data is validated, continue to next page
-            if tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=3):
+            if tab.wait.eles_loaded("xpath=//input[@data-index=0]", timeout=5):
                 print(f"[Register][{thread_id}] Continue to email code page")
                 break
             # If not in verification code page, try pass turnstile page
@@ -141,6 +140,7 @@ def sign_up(options):
     # Get email verification code
     try:
         data = email_queue.get(timeout=60)
+        assert data is not None, "Fail to get code from email."
 
         verify_code = None
         if "body_text" in data:
@@ -158,14 +158,11 @@ def sign_up(options):
             message_text = re.sub(r"&nbsp;", "", message_text)
             message_text = re.sub(r'[\n\r\s]', "", message_text)
             verify_code = re.search(r'openbrowserwindow\.(\d{6})Thiscodeexpires', message_text).group(1)
-
         assert verify_code is not None, "Fail to get code from email."
 
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email.")
         return None
-    finally:
-        email_thread.join()
 
     # Input email verification code
     for retry in range(retry_times):
@@ -173,7 +170,7 @@ def sign_up(options):
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Input email verification code")
 
             for idx, digit in enumerate(verify_code, start = 0):
-                tab.ele(f"xpath=//input[@data-index={idx}]", timeout=30).input(digit, clear=True)
+                tab.ele(f"xpath=//input[@data-index={idx}]").input(digit, clear=True)
                 tab.wait(0.1, 0.3)
             tab.wait(0.5, 1.5)
         except Exception as e:
@@ -184,7 +181,7 @@ def sign_up(options):
             if enable_register_log: print(f"[Register][{thread_id}][{retry}] Try pass Turnstile for email code page.")
             cursor_turnstile(tab)
 
-        if tab.wait.url_change(CURSOR_URL, timeout=180):
+        if tab.wait.url_change(CURSOR_URL, timeout=15):
             break
 
         # Kill the function since time out 
