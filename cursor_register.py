@@ -287,10 +287,10 @@ if __name__ == "__main__":
     oneapi_token = args.oneapi_token
     oneapi_channel_url = args.oneapi_channel_url
 
-    print(f"[Register] Start To Register {number} Accounts In {max_workers} Threads")
+    print(f"[Register] Start to register {number} accounts in {max_workers} threads")
     account_infos = register_cursor(number, max_workers)
     tokens = list(set([row['token'] for row in account_infos]))
-    print(f"[Register] Register {len(tokens)} Accounts Successfully")
+    print(f"[Register] Register {len(tokens)} accounts successfully")
     
     if use_oneapi and len(account_infos) > 0:
         from tokenManager.oneapi_manager import OneAPIManager
