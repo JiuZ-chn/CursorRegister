@@ -39,7 +39,7 @@ def cursor_turnstile(tab, retry_times = 5):
 def sign_up(options):
 
     async def wait_for_new_email_async(mail, queue, timeout=300):
-        data = mail.wait_for_new_email(delay=1.0, timeout=timeout)
+        data = mail.wait_for_new_email(delay=0.5, timeout=timeout)
         await queue.put(data)
 
     # Maybe fail to open the browser
@@ -67,7 +67,7 @@ def sign_up(options):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     
-    loop.create_task(wait_for_new_email_async(mail, queue))
+    email_code_task = loop.create_task(wait_for_new_email_async(mail, queue))
     
     tab = None
     # Input first name, last name, email
@@ -148,6 +148,11 @@ def sign_up(options):
         verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email. Email data: {data}")
+        email_code_task.cancel()
+        try:
+            loop.run_until_complete(email_code_task)
+        except asyncio.CancelledError:
+            pass
         return None
     
     # Input email verification code
