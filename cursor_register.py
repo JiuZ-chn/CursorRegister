@@ -20,6 +20,7 @@ CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
+enable_headless = True
 
 def cursor_turnstile(tab, retry_times = 5):
     thread_id = threading.current_thread().ident
@@ -105,6 +106,7 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             print(f"[Register][{thread_id}] Timeout when inputing email address")
+            if enable_headless: browser.quit(force=True, del_data=True)
             return None
     
     # Input password
@@ -136,6 +138,7 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
+            if enable_headless: browser.quit(force=True, del_data=True)
             return None
 
     # Get email verification code
@@ -163,6 +166,7 @@ def sign_up(options):
 
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email.")
+        if enable_headless: browser.quit(force=True, del_data=True)
         return None
 
     # Input email verification code
@@ -188,6 +192,7 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing email verification code")
+            if enable_headless: browser.quit(force=True, del_data=True)
             return None
 
     # Get cookie
@@ -226,7 +231,8 @@ def register_cursor(number, max_workers):
     elif platform == "win32":
         platformIdentifier = "Windows NT 10.0; Win64; x64"
     options.set_user_agent(f"Mozilla/5.0 ({platformIdentifier}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36")
-    options.headless()
+    if enable_headless: 
+        options.headless()
 
     # Run the code using multithreading
     results = []
@@ -280,6 +286,7 @@ if __name__ == "__main__":
     oneapi_token = args.oneapi_token
     oneapi_channel_url = args.oneapi_channel_url
 
+    print(f"[Register] Start To Register {number} Accounts In {max_workers} Threads")
     account_infos = register_cursor(number, max_workers)
     tokens = list(set([row['token'] for row in account_infos]))
     print(f"[Register] Register {len(tokens)} Accounts Successfully")
