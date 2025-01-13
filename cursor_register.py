@@ -39,8 +39,9 @@ def cursor_turnstile(tab, retry_times = 5):
 def sign_up(options):
 
     def wait_for_new_email_thread(mail, queue, timeout=300):
+        thread_id = threading.current_thread().ident
         for i in range(30):
-            print("[Register] Try to get email code")
+            print(f"[Register][{thread_id}] Try to get email code")
             data = mail.wait_for_new_email(delay=0.5, timeout=10)
             if data is not None:
                 print("[Register] Get Email Code Data Successfully")
@@ -53,8 +54,6 @@ def sign_up(options):
     except Exception as e:
         print(e)
         return None
-    
-    print("[Test Log]")
 
     retry_times = 5
     thread_id = threading.current_thread().ident
@@ -70,7 +69,6 @@ def sign_up(options):
 
     email_queue = queue.Queue()
     email_thread = threading.Thread(target=wait_for_new_email_thread, args=(mail, email_queue, ))
-    email_thread.daemon = True
     email_thread.start()
 
     tab = None
@@ -155,6 +153,8 @@ def sign_up(options):
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email. Email data: {data}")
         return None
+    finally:
+        email_thread.join()
 
     # Input email verification code
     for retry in range(retry_times):
