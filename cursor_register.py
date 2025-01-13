@@ -18,6 +18,7 @@ CURSOR_LOGIN_URL = "https://authenticator.cursor.sh"
 CURSOR_SIGN_UP_URL =  "https://authenticator.cursor.sh/sign-up"
 CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 
+# Parameters for debugging purpose
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
 enable_headless = True
