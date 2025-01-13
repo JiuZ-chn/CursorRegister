@@ -9,7 +9,7 @@ import concurrent.futures
 from datetime import datetime
 from faker import Faker
 from DrissionPage import ChromiumOptions, Chromium
-from temp_mails import Tempmail_io
+from temp_mails import Tempmail_io, Guerillamail_com
 
 CURSOR_URL = "https://www.cursor.com/"
 CURSOR_LOGIN_URL = "https://authenticator.cursor.sh"
@@ -53,7 +53,7 @@ def sign_up(options):
     thread_id = threading.current_thread().ident
     
     # Get temp email address
-    mail = Tempmail_io()
+    mail = Guerillamail_com()
     email = mail.email
 
     # Get password and name by faker
@@ -137,15 +137,30 @@ def sign_up(options):
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
 
             return None
-    import time
-    time.sleep(5)
 
     # Get email verification code
     try:
         data = email_queue.get(timeout=60)
-        body_text = data["body_text"]
-        message_text = body_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
-        verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
+
+        verify_code = None
+        if "body_text" in data:
+            message_text = data["body_text"]
+            message_text = message_text.strip().replace('\n', '').replace('\r', '').replace('=', '')
+            verify_code = re.search(r'open browser window\.(\d{6})This code expires', message_text).group(1)
+        elif "preview" in data:
+            message_text = data["preview"]
+            verify_code = re.search(r'Your verification code is (\d{6})\. This code expires', message_text).group(1)
+        # Handle HTML format
+        elif "content" in data:
+            message_text = data["content"]
+            message_text = re.sub(r"<[^>]*>", "", message_text)
+            message_text = re.sub(r"&#8202;", "", message_text)
+            message_text = re.sub(r"&nbsp;", "", message_text)
+            message_text = re.sub(r'[\n\r\s]', "", message_text)
+            verify_code = re.search(r'openbrowserwindow\.(\d{6})Thiscodeexpires', message_text).group(1)
+
+        assert verify_code is not None, "Fail to get code from email."
+
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email.")
         return None
