@@ -39,14 +39,9 @@ def cursor_turnstile(tab, retry_times = 5):
 def sign_up(options):
 
     def wait_for_new_email_thread(mail, queue, timeout=300):
-        thread_id = threading.current_thread().ident
-        for i in range(30):
-            print(f"[Register][{thread_id}] Try to get email code")
-            data = mail.wait_for_new_email(delay=0.5, timeout=10)
-            if data is not None:
-                print("[Register] Get Email Code Data Successfully")
-                queue.put(copy.deepcopy(data))
-                break
+        data = mail.wait_for_new_email(delay=0.5, timeout=10)
+        if data is not None:
+            queue.put(copy.deepcopy(data))
 
     # Maybe fail to open the browser
     try:
