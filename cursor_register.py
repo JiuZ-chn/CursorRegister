@@ -22,7 +22,7 @@ CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
 enable_headless = os.getenv('ENABLE_HEADLESS', 'false').lower() == 'true'
-enable_browser_log = os.getenv('ENABLE_BROWSWER_LOG', 'true').lower() == 'true' or not enable_headless
+enable_browser_log = os.getenv('ENABLE_BROWSER_LOG', 'true').lower() == 'true' or not enable_headless
 
 def cursor_turnstile(tab, retry_times = 5):
     thread_id = threading.current_thread().ident
