@@ -22,7 +22,7 @@ CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
 enable_headless = os.getenv('ENABLE_HEADLESS', 'false').lower() == 'true'
-enable_browswer_log = os.getenv('ENABLE_BROWSWER_LOG', 'true').lower() == 'true' or not enable_headless
+enable_browser_log = os.getenv('ENABLE_BROWSWER_LOG', 'true').lower() == 'true' or not enable_headless
 
 def cursor_turnstile(tab, retry_times = 5):
     thread_id = threading.current_thread().ident
@@ -108,7 +108,7 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             print(f"[Register][{thread_id}] Timeout when inputing email address")
-            if not enable_browswer_log: browser.quit(force=True, del_data=True)
+            if not enable_browser_log: browser.quit(force=True, del_data=True)
             return None
     
     # Input password
@@ -140,7 +140,7 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing password")
-            if not enable_browswer_log: browser.quit(force=True, del_data=True)
+            if not enable_browser_log: browser.quit(force=True, del_data=True)
             return None
 
     # Get email verification code
@@ -168,7 +168,7 @@ def sign_up(options):
 
     except Exception as e:
         print(f"[Register][{thread_id}] Fail to get code from email.")
-        if not enable_browswer_log: browser.quit(force=True, del_data=True)
+        if not enable_browser_log: browser.quit(force=True, del_data=True)
         return None
 
     # Input email verification code
@@ -194,7 +194,7 @@ def sign_up(options):
         # Kill the function since time out 
         if retry == retry_times - 1:
             if enable_register_log: print(f"[Register][{thread_id}] Timeout when inputing email verification code")
-            if not enable_browswer_log: browser.quit(force=True, del_data=True)
+            if not enable_browser_log: browser.quit(force=True, del_data=True)
             return None
 
     # Get cookie
