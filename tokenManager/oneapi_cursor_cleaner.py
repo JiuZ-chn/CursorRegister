@@ -20,7 +20,7 @@ def handle_oneapi_cursor_channel(channel_id,
     if response.status_code != 200:
         print(f"Fail to get channel {channel_id}. Status Code: {response.status_code}")
 
-    data = resposne.json()['data']
+    data = response.json()['data']
     key = data['key']
     status = data['status'] # 1 for enable, 2 for disbale
     remaining_balance = Cursor.get_remaining_balance(key)
