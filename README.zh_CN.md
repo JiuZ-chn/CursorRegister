@@ -44,6 +44,8 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 
 ### 管理[One-API](https://github.com/songquanpeng/one-api)的低额度渠道 
 
+- [ChatAPI] 如果运行过程中出现429报错，需提高GLOBAL_API_RATE_LIMIT值，详见[ChatAPI环境变量](https://github.com/ai365vip/chat-api?tab=readme-ov-file#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
+
 ```
 python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --disable_low_balance_accounts {disable_low_balance_accounts} --delete_low_balance_accounts {delete_low_balance_accounts}
 ```
