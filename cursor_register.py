@@ -21,7 +21,7 @@ CURSOR_SETTINGS_URL = "https://www.cursor.com/settings"
 # Parameters for debugging purpose
 hide_account_info = os.getenv('HIDE_ACCOUNT_INFO', 'false').lower() == 'true'
 enable_register_log = True
-enable_headless = True
+enable_headless = os.getenv('ENABLE_HEADLESS', 'false').lower() == 'true'
 
 def cursor_turnstile(tab, retry_times = 5):
     thread_id = threading.current_thread().ident
