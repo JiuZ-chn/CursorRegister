@@ -70,9 +70,9 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 - `Ingest account tokens to OneAPI`: 不选此项，因为在此不必使用Chat-API服务
 - `Upload account infos to artifact`: 选中此项，以保证数据被上传到工作流程构件(GitHub Artifacts)
  
-### 注册账号，并将账号令牌(Cookie Token)直接导入到[One-API](https://github.com/songquanpeng/one-api)
+### 注册账号，并将账号令牌(Cookie Token)直接导入到Chat-API](https://github.com/ai365vip/chat-api)
 
-为了在GitHub Action中使用One-API服务，你需要在你的仓库中添加如下机密(secrets)，请参考 [Github 安全指南 - 为存储库创建机密](https://docs.github.com/zh/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository)
+为了在GitHub Action中使用Chat-API服务，你需要在你的仓库中添加如下机密(secrets)，请参考 [Github 安全指南 - 为存储库创建机密](https://docs.github.com/zh/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository)
 
 - `CURSOR_ONEAPI_URL`: 对应参数 `oneapi_url`
 - `CURSOR_ONEAPI_TOKEN`: 对应参数 `oneapi_token`
