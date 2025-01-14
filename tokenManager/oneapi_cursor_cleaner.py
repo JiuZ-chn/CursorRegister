@@ -1,5 +1,9 @@
-
-# The script is used to manage low balance Cursor accounts in one-api service
+#####################################
+#
+# If you meet 429 when running this script, please increase the `GLOBAL_API_RATE_LIMIT` in your Chat-API service.
+# See more details in https://github.com/ai365vip/chat-api?tab=readme-ov-file#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F
+#
+#####################################
 
 import argparse
 import concurrent.futures
@@ -15,8 +19,10 @@ def handle_oneapi_cursor_channel(channel_id,
     response = oneapi.get_channel(channel_id)
     if response.status_code != 200:
         print(f"Fail to get channel {channel_id}. Status Code: {response.status_code}")
-    
-    key = response.json()['data']['key']
+
+    data = resposne.json()['data']
+    key = data['key']
+    status = data['status'] # 1 for enable, 2 for disbale
     remaining_balance = Cursor.get_remaining_balance(key)
     remaining_days = Cursor.get_trial_remaining_days(key)
     print(f"[OneAPI] Channel {channel_id} Info: Balance = {remaining_balance}. Trial Remaining Days = {remaining_days}")
@@ -27,7 +33,7 @@ def handle_oneapi_cursor_channel(channel_id,
         if delete_low_balance_channel:
             response = oneapi.delete_channel(channel_id)
             print(f"[OneAPI] Delete Channel {channel_id}. Status Coue: {response.status_code}")
-        elif disable_low_balance_channel:
+        elif disable_low_balance_channel and status == 1:
             response = oneapi.disable_channel(channel_id)
             print(f"[OneAPI] Disable Channel {channel_id}. Status Code: {response.status_code}")
 
