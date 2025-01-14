@@ -1,9 +1,35 @@
+
 # The script is used to manage low balance Cursor accounts in one-api service
 
 import argparse
+import concurrent.futures
 
 from oneapi_manager import OneAPIManager
 from cursor import Cursor
+
+def handle_oneapi_cursor_channel(channel_id,
+                                 disable_low_balance_channel, 
+                                 delete_low_balance_channel,
+                                 low_balance_threshold = 10):
+    
+    response = oneapi.get_channel(channel_id)
+    if response.status_code != 200:
+        print(f"Fail to get channel {channel_id}. Status Code: {response.status_code}")
+    
+    key = response.json()['data']['key']
+    remaining_balance = Cursor.get_remaining_balance(key)
+    remaining_days = Cursor.get_trial_remaining_days(key)
+    print(f"[OneAPI] Channel {channel_id} Info: Balance = {remaining_balance}. Trial Remaining Days = {remaining_days}")
+    if None in [remaining_balance, remaining_days]:
+        print(f"[OneAPI] Invalid resposne")
+        return None
+    if remaining_balance < low_balance_threshold:# or remaining_days <= 0:
+        if delete_low_balance_channel:
+            response = oneapi.delete_channel(id)
+            print(f"[OneAPI] Delete Channel {id}. Status Coue: {response.status_code}")
+        elif disable_low_balance_channel:
+            response = oneapi.disable_channel(id)
+            print(f"[OneAPI] Disable Channel {id}. Status Code: {response.status_code}")
 
 if __name__ == "__main__":
 
@@ -13,32 +39,26 @@ if __name__ == "__main__":
     parser.add_argument('--disable_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
     parser.add_argument('--delete_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
 
+    parser.add_argument('--max_workers', type=int, default=10, help="How many workers in multithreading")
+
     args = parser.parse_args()
     oneapi_url = args.oneapi_url
     oneapi_token = args.oneapi_token
     disable_low_balance_accounts = args.disable_low_balance_accounts 
     delete_low_balance_accounts = args.delete_low_balance_accounts
+    max_workers = args.max_workers
 
     oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
     response_channels = oneapi.get_channels(0, 2147483647)
     channels = response_channels.json()['data']
-    channels_id = [channel['id'] for channel in channels]
-    print(f"[OneAPI] Channel Count: {len(channels_id)}")
+    channels_ids = [channel['id'] for channel in channels]
+    channels_ids = sorted(channels_ids, key=int)
+    print(f"[OneAPI] Channel Count: {len(channels_ids)}")
 
-    # Remove channel with low quota
-    for id in channels_id:
-        key = oneapi.get_channel(id).json()['data']['key']
-        remaining_balance = Cursor.get_remaining_balance(key)
-        remaining_days = Cursor.get_trial_remaining_days(key)
-        print(f"[OneAPI] Channel {id} Info: Balance = {remaining_balance}. Trial Remaining Days = {remaining_days}")
-        if None in [remaining_balance, remaining_days]:
-            print(f"[OneAPI] Invalid resposne")
-            continue
-        if remaining_balance < 10:# or remaining_days <= 0:
-            if disable_low_balance_accounts:
-                response = oneapi.disable_channel(id)
-                print(f"[OneAPI] Disable Channel {id}: {response.status_code}")
-            if delete_low_balance_accounts:
-                response = oneapi.delete_channel(id)
-                print(f"[OneAPI] Delete Channel {id}: {response.status_code}")
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        futures = [executor.submit(handle_oneapi_cursor_channel, 
+                                   id, disable_low_balance_accounts, delete_low_balance_accounts) 
+                                   for id in channels_ids]
+        for future in concurrent.futures.as_completed(futures):
+            result = future.result()
