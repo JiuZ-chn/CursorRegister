@@ -14,8 +14,8 @@
 ## 功能
 
 - 注册Cursor账号并保存账号、密码、令牌(token)到本地
-- 注册Cursor账号并上传令牌(token)到One-API
-- 管理One-API中额度不足的Cursor账号（支持删除/禁用）
+- 注册Cursor账号并上传令牌(token)到Chat-API
+- 管理Chat-API中额度不足的Cursor账号（支持删除/禁用）
 - 上述功能均支持在Github Action中运行
 
 ## 本地运行
@@ -33,26 +33,26 @@ python cursor_register.py --number 3
 ```
 - `number`: 希望注册的账号数量
 
-### 注册账号，并将账号的令牌(Cookie token)导入到[One-API](https://github.com/songquanpeng/one-api)
+### 注册账号，并将账号的令牌(Cookie token)导入到[Chat-API](https://github.com/ai365vip/chat-api)
 
 ```
 python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --oneapi_channel_url {oneapi_channel_url} --oneapi --number 5
 ```
-- `oneapi_url`: One-API 地址
-- `oneapi_token`: One-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
-- `oneapi_channel_url`: Cursor-API 反代服务地址，需自行搭建Cursor-API反代服务 [cursor-api](https://github.com/lvguanjun/cursor-api)
+- `oneapi_url`: Chat-API 地址
+- `oneapi_token`: Chat-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+- `oneapi_channel_url`: Cursor-API 反代服务地址，需自行搭建Cursor-API反代服务 [Cursor-To-OpenAI](https://github.com/JiuZ-Chn/Cursor-To-OpenAI)
 
-### 管理[One-API](https://github.com/songquanpeng/one-api)的低额度渠道 
+### 管理[Chat-API](https://github.com/ai365vip/chat-api)的低额度渠道 
 
 - [ChatAPI] 如果运行过程中出现429报错，需提高GLOBAL_API_RATE_LIMIT值，详见[ChatAPI环境变量](https://github.com/ai365vip/chat-api?tab=readme-ov-file#%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F)
 
 ```
 python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token} --disable_low_balance_accounts {disable_low_balance_accounts} --delete_low_balance_accounts {delete_low_balance_accounts}
 ```
-- `oneapi_url`: One-API 地址
-- `oneapi_token`: One-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
-- `disable_low_balance_accounts`: `True` 或 `False`，禁用One-API中的低额度账号
-- `delete_low_balance_accounts`: `True` 或 `False`，删除One-API中的低额度账号
+- `oneapi_url`: Chat-API 地址
+- `oneapi_token`: Chat-API 访问令牌(token)，详见 [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
+- `disable_low_balance_accounts`: `True` 或 `False`，禁用Chat-API中的低额度账号
+- `delete_low_balance_accounts`: `True` 或 `False`，删除Chat-API中的低额度账号
 
 ## 在Github Action中运行
 
@@ -60,14 +60,14 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 
 ### 注册账号，随后从[工作流程构件(GitHub Artifacts)](https://docs.github.com/zh/actions/managing-workflow-runs-and-deployments/managing-workflow-runs/downloading-workflow-artifacts)中下载账号信息
 
-适用于手动导入账户令牌(token)或One-API没有公网ip的用户。账号注册完成后需手动从工作流程构件(GitHub Artifacts)中下载账号信息。
+适用于手动导入账户令牌(token)或Chat-API没有公网ip的用户。账号注册完成后需手动从工作流程构件(GitHub Artifacts)中下载账号信息。
 
 **务必在下载完成后删除网页中的工作流程构件(GitHub Artifacts)以避免数据泄漏**
 
 请运行 **`Cursor Register`** 并使用下列参数
 - `number`: 希望注册的账号数量
 - `max_workers`: 线程池的并行度. 推荐在Github Action中使用 `max_workers=1`
-- `Ingest account tokens to OneAPI`: 不选此项，因为在此不必使用One-API服务
+- `Ingest account tokens to OneAPI`: 不选此项，因为在此不必使用Chat-API服务
 - `Upload account infos to artifact`: 选中此项，以保证数据被上传到工作流程构件(GitHub Artifacts)
  
 ### 注册账号，并将账号令牌(Cookie Token)直接导入到[One-API](https://github.com/songquanpeng/one-api)
@@ -81,7 +81,7 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 请运行 **`Cursor Register`** 并使用下列参数
 - `number`: 希望注册的账号数量
 - `max_workers`: 线程池的并行度. 推荐在Github Action中使用 `max_workers=1`
-- `Ingest account tokens to OneAPI`: 选中此项，以开启One-API服务
+- `Ingest account tokens to OneAPI`: 选中此项，以开启Chat-API服务
 - `Upload account infos to artifact`: 如果选中，那么数据也将被上传到工作流程构件(GitHub Artifacts)，如果不选则跳过该步骤。
  
 ### 管理[One-API](https://github.com/songquanpeng/one-api)中额度不足的Cursor账号 
