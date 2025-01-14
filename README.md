@@ -13,8 +13,8 @@ Automatically register a Cursor account and save the account name, password, and
 ## Feature
 
 - Register Cursor accounts and save account, password and token to .csv locally.
-- Register Cursor accounts upload tokens to One API.
-- Manage Cursor channels with low balance in One API.
+- Register Cursor accounts upload tokens to Chat API.
+- Manage Cursor channels with low balance in Chat API.
 - The above features all support to run in Github Action environment.
 
 ## Run in local
@@ -39,7 +39,7 @@ python cursor_register.py --oneapi_url {oneapi_url} --oneapi_token {oneapi_token
 ```
 - `oneapi_url`: The web address for your chatapi server. 
 - `oneapi_token`: The access token for your chatapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
-- `oneapi_channel_url`: The cursor-api reverse proxy server like [cursor-api](https://github.com/lvguanjun/cursor-api)
+- `oneapi_channel_url`: The cursor-api reverse proxy server like [Cursor-To-OpenAI](https://github.com/JiuZ-Chn/Cursor-To-OpenAI)
 
 ### Manage low balance Cursor channels in [Chat-API](https://github.com/ai365vip/chat-api)
 
@@ -48,8 +48,8 @@ python tokenManager/oneapi_cursor_cleaner.py --oneapi_url {oneapi_url} --oneapi_
 ```
 - `oneapi_url`: The web address for your chatapi server. 
 - `oneapi_token`: The access token for your chatapi website. See more details in [OneAPI API](https://github.com/songquanpeng/one-api/blob/main/docs/API.md)
-- `disable_low_balance_accounts`: `True` or `False` to disable the low balance accounts in One-API
-- `delete_low_balance_accounts`: `True` or `False` to delete the low balance accounts in One-API
+- `disable_low_balance_accounts`: `True` or `False` to disable the low balance accounts in Chat-API
+- `delete_low_balance_accounts`: `True` or `False` to delete the low balance accounts in Chat-API
 
 ## Run in Github Action
 
@@ -60,12 +60,12 @@ If you want to use the token directly or your ChatAPI does not have a public IP,
 Please run the Github Action pipeline **`Cursor Register`** with the following parameter:
 - `number`: The account number you want to register.
 - `max_workers`: Parallelism for threading pool. Suggest to use `1` in Github Action environment.
-- `Ingest account tokens to OneAPI`: Mark as `☐` to disable One-API service.
+- `Ingest account tokens to OneAPI`: Mark as `☐` to disable Chat-API service.
 - `Upload account infos to artifact`: Mark as `☑` to make Github Action uploead the csv files to artifacts. Then you can download them after workflow succeeds.
 
 ### Register accounts. Upload the account cookie token into [Chat-API](https://github.com/ai365vip/chat-api)
 
-Before ingest the account cookie into ONE API, you need to add the following secret in your repo. If you are new to use secret in Github Action. you can add the secret following [Security Guides](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) 
+Before ingest the account cookie into Chat API, you need to add the following secret in your repo. If you are new to use secret in Github Action. you can add the secret following [Security Guides](https://docs.github.com/en/actions/security-for-github-actions/security-guides/using-secrets-in-github-actions#creating-secrets-for-a-repository) 
 
 - `CURSOR_ONEAPI_URL`: For parameter `oneapi_url`
 - `CURSOR_ONEAPI_TOKEN`: For parameter `oneapi_token`
@@ -91,7 +91,7 @@ Please run the Github Action pipeline **`OneAPI Cursor Cleaner`**.
 
 ## Todo
 - Maybe some bugs when running in multiple threading mode (`max_workers` > 1), but not sure. :(
-- A new Github Action pipeline to automatically maintain the minimum balance of Curosr accounts in OneAPI, and automatically register if the balance is too low.
+- A new Github Action pipeline to automatically maintain the minimum balance of Curosr accounts in ChatAPI, and automatically register if the balance is too low.
 
 ## Thanks
 - [cursor-api](https://github.com/Old-Camel/cursor-api/) for Python code in auto register
