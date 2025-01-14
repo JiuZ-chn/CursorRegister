@@ -84,7 +84,7 @@ GitHub Action适用于不便在本地搭建环境或本地环境不佳的用户�
 - `Ingest account tokens to OneAPI`: 选中此项，以开启Chat-API服务
 - `Upload account infos to artifact`: 如果选中，那么数据也将被上传到工作流程构件(GitHub Artifacts)，如果不选则跳过该步骤。
  
-### 管理[One-API](https://github.com/songquanpeng/one-api)中额度不足的Cursor账号 
+### 管理[Chat-API](https://github.com/ai365vip/chat-api)中额度不足的Cursor账号 
 
 请运行 **`OneAPI Cursor Cleaner`**。需要先保证已添加了下列机密(secrets)。
 
