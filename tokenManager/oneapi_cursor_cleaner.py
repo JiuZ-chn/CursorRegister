@@ -25,11 +25,11 @@ def handle_oneapi_cursor_channel(channel_id,
         return None
     if remaining_balance < low_balance_threshold:# or remaining_days <= 0:
         if delete_low_balance_channel:
-            response = oneapi.delete_channel(id)
-            print(f"[OneAPI] Delete Channel {id}. Status Coue: {response.status_code}")
+            response = oneapi.delete_channel(channel_id)
+            print(f"[OneAPI] Delete Channel {channel_id}. Status Coue: {response.status_code}")
         elif disable_low_balance_channel:
-            response = oneapi.disable_channel(id)
-            print(f"[OneAPI] Disable Channel {id}. Status Code: {response.status_code}")
+            response = oneapi.disable_channel(channel_id)
+            print(f"[OneAPI] Disable Channel {channel_id}. Status Code: {response.status_code}")
 
 if __name__ == "__main__":
 
@@ -39,7 +39,7 @@ if __name__ == "__main__":
     parser.add_argument('--disable_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
     parser.add_argument('--delete_low_balance_accounts', default=False, type=lambda x: (str(x).lower() == 'true'))
 
-    parser.add_argument('--max_workers', type=int, default=10, help="How many workers in multithreading")
+    parser.add_argument('--max_workers', type=int, default=10, help="How many workers in multi-threading")
 
     args = parser.parse_args()
     oneapi_url = args.oneapi_url
