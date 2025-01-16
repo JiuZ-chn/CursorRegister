@@ -33,7 +33,7 @@ class OneAPIManager:
         return response
 
     def get_channels(self, page, pagesize):
-        url = self.base_url + f"/api/channel/?p={page}&page_size={pagesize}"
+        url = self.base_url + f"/api/channel/?page={page}&size={pagesize}"
 
         response = requests.get(url, headers=self.headers)
         return response

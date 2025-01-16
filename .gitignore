@@ -1,1 +1,3 @@
- tokenManager/__pycache__/
+__pycache__/
+*.pyc
+tokenManager/__pycache__/

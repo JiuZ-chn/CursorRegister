@@ -56,8 +56,8 @@ if __name__ == "__main__":
 
     oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
-    response_channels = oneapi.get_channels(0, 2147483647)
-    channels = response_channels.json()['data']
+    response_channels = oneapi.get_channels(1, 100)
+    channels = response_channels.json()['data']['data']
     channels_ids = [channel['id'] for channel in channels]
     channels_ids = sorted(channels_ids, key=int)
     print(f"[OneAPI] Channel Count: {len(channels_ids)}")
