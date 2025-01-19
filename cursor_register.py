@@ -61,8 +61,8 @@ def sign_up(options):
     thread_id = threading.current_thread().ident
     
     # Get temp email address
-    mail = Tempmail_io()
-    #mail = Guerillamail_com()
+    #mail = Tempmail_io()
+    mail = Guerillamail_com()
     email = mail.email
 
     # Get password and name by faker
