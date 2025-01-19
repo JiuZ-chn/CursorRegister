@@ -309,7 +309,7 @@ if __name__ == "__main__":
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
         # Send request one by one to avoid "Too many SQL variables" error
-        for idx, token in enumerate(tokens):
+        for idx, token in enumerate(tokens, start=1):
             response = oneapi.add_channel("Cursor",
                                           oneapi_channel_url,
                                           token,
