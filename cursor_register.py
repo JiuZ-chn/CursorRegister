@@ -308,12 +308,14 @@ if __name__ == "__main__":
         from tokenManager.cursor import Cursor
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
-        # Send request one by one to avoid "Too many SQL variables" error in SQLite.
-        # If you use MySQL, better to call this function using '\n'.join(tokens) as parameter.
-        for idx, token in enumerate(tokens, start=1):
+        # Send request by batch to avoid "Too many SQL variables" error in SQLite.
+        # If you use MySQL, better to set the batch_size as len(tokens)
+        batch_size = 10
+        for idx, i in enumerate(range(0, len(tokens), batch_size), start=1):
+            batch = tokens[i:i + batch_size]
             response = oneapi.add_channel("Cursor",
                                           oneapi_channel_url,
-                                          token,
+                                          '\n'.join(batch),
                                           Cursor.models)
-            print(f'[OneAPI] Add Channel Request For Account {idx} Status Code: {response.status_code}')
-            print(f'[OneAPI] Add Channel Request For Account {idx} Response Body: {response.json()}')
+            print(f'[OneAPI] Add Channel Request For Batch {idx} Status Code: {response.status_code}')
+            print(f'[OneAPI] Add Channel Request For Batch {idx} Response Body: {response.json()}')
