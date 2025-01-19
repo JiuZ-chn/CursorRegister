@@ -308,7 +308,8 @@ if __name__ == "__main__":
         from tokenManager.cursor import Cursor
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
 
-        # Send request one by one to avoid "Too many SQL variables" error
+        # Send request one by one to avoid "Too many SQL variables" error in SQLite.
+        # If you use MySQL, better to call this function using '\n'.join(tokens) as parameter.
         for idx, token in enumerate(tokens, start=1):
             response = oneapi.add_channel("Cursor",
                                           oneapi_channel_url,
