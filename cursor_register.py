@@ -307,9 +307,12 @@ if __name__ == "__main__":
         from tokenManager.oneapi_manager import OneAPIManager
         from tokenManager.cursor import Cursor
         oneapi = OneAPIManager(oneapi_url, oneapi_token)
-        response = oneapi.add_channel("Cursor",
-                                      oneapi_channel_url,
-                                      tokens,
-                                      Cursor.models)
-        print(f'[OneAPI] Add Channel Request Status Code: {response.status_code}')
-        print(f'[OneAPI] Add Channel Request Response Body: {response.json()}')
+
+        # Send request one by one to avoid "Too many SQL variables" error
+        for idx, token in enumerate(tokens):
+            response = oneapi.add_channel("Cursor",
+                                          oneapi_channel_url,
+                                          token,
+                                          Cursor.models)
+            print(f'[OneAPI] Add Channel Request For Account {idx} Status Code: {response.status_code}')
+            print(f'[OneAPI] Add Channel Request For Account {idx} Response Body: {response.json()}')
