@@ -317,5 +317,4 @@ if __name__ == "__main__":
                                           oneapi_channel_url,
                                           '\n'.join(batch),
                                           Cursor.models)
-            print(f'[OneAPI] Add Channel Request For Batch {idx} Status Code: {response.status_code}')
-            print(f'[OneAPI] Add Channel Request For Batch {idx} Response Body: {response.json()}')
+            print(f'[OneAPI] Add Channel Request For Batch {idx}. Status Code: {response.status_code}, Response Body: {response.json()}')
