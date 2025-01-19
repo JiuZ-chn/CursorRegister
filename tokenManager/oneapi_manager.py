@@ -22,12 +22,13 @@ class OneAPIManager:
         response = requests.get(url, headers=self.headers)
         return response
 
-    def add_channel(self, name, base_url, keys, models, rate_limit_count = 0):
+    # Support multiple keys separated by '\n'
+    def add_channel(self, name, base_url, key, models, rate_limit_count = 0):
         url = self.base_url + "/api/channel"
 
         data = {"name": name,
                 "type": 1,
-                "key": "\n".join(keys),
+                "key": key,
                 "openai_organization": "",
                 "base_url": base_url,
                 "other": "",
